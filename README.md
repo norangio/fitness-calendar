@@ -6,7 +6,7 @@ A local-first fitness activity calendar built with React and TypeScript. Import 
 
 - **Garmin CSV Import** — drag-and-drop your Garmin export files with automatic deduplication (re-import safely without duplicates)
 - **Multiple Calendar Views** — day, week, month, year, and heatmap views with keyboard navigation
-- **Activity Charts** — stacked bar charts showing activity hours broken down by type
+- **Activity Charts** — area charts showing activity hours over time
 - **Body Wellness Tracking** — log pain/discomfort (back, knee) with severity ratings and notes
 - **JSON Backup & Restore** — export all data to a JSON file and restore it anytime
 - **Dark/Light Theme** — toggle between dark and light mode
@@ -14,10 +14,24 @@ A local-first fitness activity calendar built with React and TypeScript. Import 
 
 ## Getting Started
 
+You'll need [Node.js](https://nodejs.org/) installed (which includes npm, the JavaScript package manager).
+
 ```bash
-npm install
-npm run dev
+npm install    # download dependencies
+npm run dev    # start the app locally
 ```
+
+## Importing from Garmin Connect
+
+1. Go to [Garmin Connect](https://connect.garmin.com/) and sign in
+2. Navigate to **Activities** → **All Activities**
+3. In the top-right corner, click the **Export CSV** button (download icon)
+4. This downloads a file called `Activities.csv`
+5. In the app, click **Import** in the header
+6. Drag and drop the CSV file (or click Browse to select it)
+7. Preview the parsed activities and click **Import**
+
+You can re-import the same file or updated exports as often as you like — the app automatically skips activities that already exist.
 
 ## Tech Stack
 
