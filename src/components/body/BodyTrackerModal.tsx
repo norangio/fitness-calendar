@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 import { Button } from '../ui/Button.tsx';
 import { useAppStore } from '../../store/activityStore.ts';
 import type { PainCategory, BodyLogEntry } from '../../types/bodyLog.ts';
+import { PRESET_CATEGORIES } from '../../types/bodyLog.ts';
 import { format } from '../../lib/dateUtils.ts';
 
 interface BodyTrackerModalProps {
@@ -10,11 +11,6 @@ interface BodyTrackerModalProps {
   onClose: () => void;
   onSave: (entry: BodyLogEntry) => void;
 }
-
-const CATEGORIES: { value: PainCategory; label: string }[] = [
-  { value: 'back', label: 'Back' },
-  { value: 'knee', label: 'Knee' },
-];
 
 const SEVERITY_LABELS: Record<number, string> = {
   1: 'Mild',
@@ -37,6 +33,7 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
   const setLastUsedCategories = useAppStore((s) => s.setLastUsedCategories);
 
   const [selectedCategories, setSelectedCategories] = useState<PainCategory[]>([]);
+  const [customCategory, setCustomCategory] = useState('');
   const [severity, setSeverity] = useState(3);
   const [notes, setNotes] = useState('');
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -45,6 +42,7 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
   useEffect(() => {
     if (open) {
       setSelectedCategories(lastUsedCategories.length > 0 ? [...lastUsedCategories] : []);
+      setCustomCategory('');
       setSeverity(3);
       setNotes('');
       setDate(format(new Date(), 'yyyy-MM-dd'));
@@ -58,6 +56,27 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
       prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
     );
   };
+
+  const addCustomCategory = () => {
+    const trimmed = customCategory.trim().toLowerCase();
+    if (!trimmed) return;
+    if (!selectedCategories.includes(trimmed)) {
+      setSelectedCategories((prev) => [...prev, trimmed]);
+    }
+    setCustomCategory('');
+  };
+
+  const handleCustomKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addCustomCategory();
+    }
+  };
+
+  // Categories that are selected but not in the preset list
+  const customSelected = selectedCategories.filter(
+    (cat) => !PRESET_CATEGORIES.some((p) => p.value === cat)
+  );
 
   const handleSave = () => {
     if (selectedCategories.length === 0) return;
@@ -102,9 +121,9 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
 
         {/* Categories */}
         <div className="mb-4">
-          <label className="block text-xs font-medium text-slate-400 mb-2">Category</label>
-          <div className="flex gap-2">
-            {CATEGORIES.map((cat) => (
+          <label className="block text-xs font-medium text-slate-400 mb-2">Body Part</label>
+          <div className="flex flex-wrap gap-2">
+            {PRESET_CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => toggleCategory(cat.value)}
@@ -117,6 +136,34 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
                 {cat.label}
               </button>
             ))}
+            {customSelected.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => toggleCategory(cat)}
+                className="px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer bg-orange-500 text-white"
+              >
+                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                <span className="ml-1.5 opacity-70">&times;</span>
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-2 mt-2">
+            <input
+              type="text"
+              value={customCategory}
+              onChange={(e) => setCustomCategory(e.target.value)}
+              onKeyDown={handleCustomKeyDown}
+              placeholder="Other body part…"
+              className="flex-1 rounded-lg bg-slate-700 border border-slate-600 px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-orange-500"
+            />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={addCustomCategory}
+              disabled={!customCategory.trim()}
+            >
+              Add
+            </Button>
           </div>
         </div>
 

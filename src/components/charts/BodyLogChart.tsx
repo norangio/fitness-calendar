@@ -16,10 +16,21 @@ interface BodyLogChartProps {
   dateRange: { start: Date; end: Date };
 }
 
-const CATEGORY_CONFIG: Record<PainCategory, { label: string; color: string }> = {
+/** Colors for known categories + a palette for custom ones. */
+const KNOWN_COLORS: Record<string, { label: string; color: string }> = {
   back: { label: 'Back', color: '#818cf8' },   // indigo-400
   knee: { label: 'Knee', color: '#c084fc' },   // purple-400
+  ankle: { label: 'Ankle', color: '#34d399' }, // emerald-400
 };
+
+const FALLBACK_COLORS = ['#f472b6', '#fb923c', '#38bdf8', '#a3e635', '#fbbf24', '#e879f9'];
+
+function getCategoryConfig(cat: string, customIndex: number): { label: string; color: string } {
+  if (KNOWN_COLORS[cat]) return KNOWN_COLORS[cat];
+  const color = FALLBACK_COLORS[customIndex % FALLBACK_COLORS.length];
+  const label = cat.charAt(0).toUpperCase() + cat.slice(1);
+  return { label, color };
+}
 
 const SEVERITY_LABELS: Record<number, string> = {
   1: 'Mild', 2: 'Slight', 3: 'Moderate', 4: 'Bad', 5: 'Severe',
@@ -70,6 +81,19 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
     return [...cats] as PainCategory[];
   }, [bodyLogs]);
 
+  const categoryConfigs = useMemo(() => {
+    const configs: Record<string, { label: string; color: string }> = {};
+    let customIdx = 0;
+    for (const cat of categories) {
+      if (KNOWN_COLORS[cat]) {
+        configs[cat] = KNOWN_COLORS[cat];
+      } else {
+        configs[cat] = getCategoryConfig(cat, customIdx++);
+      }
+    }
+    return configs;
+  }, [categories]);
+
   const data = useMemo(() => {
     const buckets = buildBuckets(viewMode, dateRange);
 
@@ -80,7 +104,6 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
         const entries = bodyLogs.filter(
           (b) => b.category === cat && b.date >= bucket.startKey && b.date <= bucket.endKey
         );
-        // Use max severity in the bucket, null if no entries (so the line has gaps)
         point[cat] = entries.length > 0
           ? Math.max(...entries.map((e) => e.severity))
           : null;
@@ -127,7 +150,7 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
             labelStyle={{ color: '#94a3b8' }}
             formatter={((value?: number, name?: string) => {
               if (value == null) return ['-', name ?? ''];
-              const config = CATEGORY_CONFIG[(name ?? '') as PainCategory];
+              const config = categoryConfigs[(name ?? '')];
               return [`${value}/5 (${SEVERITY_LABELS[value]})`, config?.label ?? name ?? ''];
             }) as never}
           />
@@ -137,10 +160,10 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
               type="monotone"
               dataKey={cat}
               name={cat}
-              stroke={CATEGORY_CONFIG[cat].color}
+              stroke={categoryConfigs[cat].color}
               strokeWidth={2}
-              dot={{ r: 3, fill: CATEGORY_CONFIG[cat].color }}
-              activeDot={{ r: 5, fill: CATEGORY_CONFIG[cat].color }}
+              dot={{ r: 3, fill: categoryConfigs[cat].color }}
+              activeDot={{ r: 5, fill: categoryConfigs[cat].color }}
               connectNulls={false}
             />
           ))}
@@ -151,8 +174,8 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
       <div className="flex flex-wrap gap-3 mt-2">
         {categories.map((cat) => (
           <div key={cat} className="flex items-center gap-1.5 text-xs text-slate-400">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: CATEGORY_CONFIG[cat].color }} />
-            {CATEGORY_CONFIG[cat].label}
+            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: categoryConfigs[cat].color }} />
+            {categoryConfigs[cat].label}
           </div>
         ))}
       </div>
