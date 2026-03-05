@@ -1,6 +1,6 @@
 # Fitness Calendar
 
-A local-first fitness activity calendar built with React and TypeScript. Import your Garmin CSV exports, visualize your training across multiple calendar views, and track body wellness over time.
+A self-hosted fitness activity calendar built with React, TypeScript, and FastAPI. Import your Garmin CSV exports, visualize your training across multiple calendar views, and track body wellness over time. Data is stored server-side in SQLite so it's accessible from any device.
 
 ## Features
 
@@ -11,15 +11,21 @@ A local-first fitness activity calendar built with React and TypeScript. Import 
 - **GitHub Gist Sync** — push all activity + body log data to a private GitHub Gist for use by external tools (e.g. email digest)
 - **JSON Backup & Restore** — export all data to a JSON file and restore it anytime
 - **Dark/Light Theme** — toggle between dark and light mode
-- **Fully Local** — all data stored in your browser via IndexedDB, no server required
 
-## Getting Started
+## Getting Started (local dev)
 
-You'll need [Node.js](https://nodejs.org/) installed (which includes npm, the JavaScript package manager).
+You'll need Node.js and Python 3.11+ installed.
 
 ```bash
-npm install    # download dependencies
-npm run dev    # start the app locally
+# Terminal 1 — backend
+cd backend
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --host 127.0.0.1 --port 8001 --reload
+
+# Terminal 2 — frontend (proxies /api/* to the backend)
+npm install
+npm run dev
 ```
 
 ## Importing from Garmin Connect
@@ -36,13 +42,21 @@ You can re-import the same file or updated exports as often as you like — the 
 
 ## Tech Stack
 
-- React 19, TypeScript, Vite 7
-- Tailwind CSS (dark theme, slate/orange palette)
-- Zustand (state management)
-- Dexie.js (IndexedDB storage)
-- Recharts (charts)
-- Framer Motion (transitions)
-- date-fns (date utilities)
+**Frontend:** React 19, TypeScript, Vite 7, Tailwind CSS, Zustand, Recharts, Framer Motion, date-fns
+
+**Backend:** FastAPI, SQLite (via SQLAlchemy), Uvicorn
+
+**Hosting:** Hetzner, Caddy (reverse proxy + HTTPS), systemd
+
+## Deployment
+
+See `deploy/` for the systemd service file, Caddyfile snippet, and setup script.
+
+1. `npm run build` locally → sync `dist/` to `/opt/fitness-calendar/dist/` on the server
+2. Push `backend/` to `/opt/fitness-calendar/backend/`
+3. Run `deploy/setup.sh` on the server (once, for initial setup)
+4. Add the Caddyfile snippet and reload Caddy
+5. Add a DNS A record pointing your subdomain to the server IP
 
 ## Keyboard Shortcuts
 
@@ -64,8 +78,8 @@ The app can push all data to a private GitHub Gist, enabling external tools (lik
    ```
 4. A **Sync** button will appear in the header — click it to push your data
 
-The sync overwrites the gist with a full export each time. The gist is the read-only snapshot; IndexedDB remains the source of truth.
+The sync overwrites the gist with a full export each time. SQLite is the source of truth; the gist is a read-only snapshot for external consumers.
 
 ## Data & Storage
 
-All data lives in your browser's IndexedDB. To protect against data loss (e.g. clearing browser data), use the **Export** button in the header to download a JSON backup. Use **Restore** to re-import from a backup file.
+All data is stored server-side in a SQLite database, so it's the same on any device. Use the **Export** button to download a JSON backup, and **Restore** to re-import from a backup file.
