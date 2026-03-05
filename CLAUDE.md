@@ -104,6 +104,17 @@ src/
 - Full overwrite each sync — SQLite is source of truth, gist is read-only snapshot
 - Used by the email-reports pipeline to generate weekly fitness digest insights
 
+### Deployment
+Run `./deploy.sh` from the project root. It builds the frontend, rsyncs `dist/` and `backend/` to the server, and restarts the systemd service. The server does **not** have a git clone — it runs the rsynced files directly.
+
+```
+App dir: /opt/fitness-calendar/
+Service: systemctl status fitness-calendar
+Logs:    journalctl -u fitness-calendar -f
+```
+
+<!-- TODO: Set up GitHub Actions to auto-deploy on push to main (npm build + rsync dist + rsync backend + restart service) -->
+
 ### Patterns
 - All date keys use `'yyyy-MM-dd'` format
 - Hooks follow pattern: fetch on mount/range change, expose add/remove/refresh
