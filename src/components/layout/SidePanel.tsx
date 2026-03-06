@@ -18,7 +18,7 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
   const uniqueTypes = [...new Set(activities.map((a) => a.type))];
 
   return (
-    <aside className="flex flex-col gap-4 border-l border-slate-700 bg-slate-800/50 p-5 overflow-y-auto">
+    <aside className="flex flex-col gap-4 border-l border-slate-700 bg-slate-800/50 p-5 overflow-y-auto w-80 shrink-0">
       <div>
         <h2 className="text-sm font-medium text-slate-400 uppercase tracking-wider">Summary</h2>
         <div className="mt-3 grid grid-cols-2 gap-3">

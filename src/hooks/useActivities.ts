@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Activity } from '../types/activity.ts';
-import { getActivitiesByDateRange, addActivity, addActivities, addActivitiesDeduped, deleteActivity, getActivityCount } from '../lib/storage.ts';
+import { api } from '../lib/api.ts';
 
 export function useActivities(startDate: string, endDate: string) {
   const [activities, setActivities] = useState<Activity[]>([]);
@@ -10,7 +10,7 @@ export function useActivities(startDate: string, endDate: string) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    getActivitiesByDateRange(startDate, endDate).then((data) => {
+    api.activities.list(startDate, endDate).then((data) => {
       if (!cancelled) {
         setActivities(data);
         setLoading(false);
@@ -22,33 +22,25 @@ export function useActivities(startDate: string, endDate: string) {
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   const add = useCallback(async (activity: Activity) => {
-    await addActivity(activity);
+    await api.activities.create(activity);
     refresh();
   }, [refresh]);
 
   const bulkAdd = useCallback(async (items: Activity[]) => {
-    await addActivities(items);
+    for (const item of items) await api.activities.create(item);
     refresh();
   }, [refresh]);
 
   const bulkAddDeduped = useCallback(async (items: Activity[]) => {
-    const result = await addActivitiesDeduped(items);
+    const result = await api.activities.bulkImport(items);
     refresh();
     return result;
   }, [refresh]);
 
   const remove = useCallback(async (id: string) => {
-    await deleteActivity(id);
+    await api.activities.delete(id);
     refresh();
   }, [refresh]);
 
   return { activities, loading, refresh, add, bulkAdd, bulkAddDeduped, remove };
-}
-
-export function useActivityCount() {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    getActivityCount().then(setCount);
-  }, []);
-  return count;
 }

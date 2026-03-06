@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { BodyLogEntry } from '../types/bodyLog.ts';
-import { getBodyLogsByDateRange, addBodyLog, deleteBodyLog } from '../lib/storage.ts';
+import { api } from '../lib/api.ts';
 
 export function useBodyLogs(startDate: string, endDate: string) {
   const [bodyLogs, setBodyLogs] = useState<BodyLogEntry[]>([]);
@@ -10,7 +10,7 @@ export function useBodyLogs(startDate: string, endDate: string) {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
-    getBodyLogsByDateRange(startDate, endDate).then((data) => {
+    api.bodyLogs.list(startDate, endDate).then((data) => {
       if (!cancelled) {
         setBodyLogs(data);
         setLoading(false);
@@ -22,12 +22,12 @@ export function useBodyLogs(startDate: string, endDate: string) {
   const refresh = useCallback(() => setRefreshKey((k) => k + 1), []);
 
   const add = useCallback(async (entry: BodyLogEntry) => {
-    await addBodyLog(entry);
+    await api.bodyLogs.create(entry);
     refresh();
   }, [refresh]);
 
   const remove = useCallback(async (id: string) => {
-    await deleteBodyLog(id);
+    await api.bodyLogs.delete(id);
     refresh();
   }, [refresh]);
 

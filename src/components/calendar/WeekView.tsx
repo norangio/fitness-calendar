@@ -32,7 +32,7 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Day headers */}
-      <div className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-slate-700">
+      <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] border-b border-slate-700">
         <div />
         {days.map((day) => {
           const today = isToday(day);
@@ -54,8 +54,8 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
       </div>
 
       {/* Time grid */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="grid grid-cols-[60px_repeat(7,1fr)] relative">
+      <div className="flex-1 overflow-y-auto overflow-x-auto">
+        <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] relative min-w-[500px]">
           {HOURS.map((hour) => (
             <div key={hour} className="contents">
               <div className="h-14 border-b border-slate-700/30 pr-2 text-right text-[10px] text-slate-500 pt-0.5">

@@ -21,7 +21,8 @@ interface MonthViewProps {
   onActivityClick: (activity: Activity) => void;
 }
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS_LONG = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS_SHORT = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 export function MonthView({ anchorDate, activities, bodyLogs = [], onDayClick, onActivityClick }: MonthViewProps) {
   const monthStart = startOfMonth(anchorDate);
@@ -47,9 +48,10 @@ export function MonthView({ anchorDate, activities, bodyLogs = [], onDayClick, o
   return (
     <div className="flex flex-col flex-1 min-h-0">
       <div className="grid grid-cols-7 border-b border-slate-700">
-        {WEEKDAYS.map((d) => (
-          <div key={d} className="px-2 py-2 text-xs font-medium text-slate-400 text-center">
-            {d}
+        {WEEKDAYS_LONG.map((d, i) => (
+          <div key={d} className="px-1 sm:px-2 py-1 sm:py-2 text-xs font-medium text-slate-400 text-center">
+            <span className="hidden sm:inline">{d}</span>
+            <span className="sm:hidden">{WEEKDAYS_SHORT[i]}</span>
           </div>
         ))}
       </div>
@@ -64,7 +66,7 @@ export function MonthView({ anchorDate, activities, bodyLogs = [], onDayClick, o
           return (
             <div
               key={key}
-              className={`border-b border-r border-slate-700/50 p-1.5 overflow-hidden cursor-pointer hover:bg-slate-700/30 transition-colors ${
+              className={`border-b border-r border-slate-700/50 p-0.5 sm:p-1.5 overflow-hidden cursor-pointer hover:bg-slate-700/30 transition-colors ${
                 !inMonth ? 'opacity-30' : ''
               }`}
               onClick={() => onDayClick(day)}

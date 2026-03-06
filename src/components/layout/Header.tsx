@@ -2,14 +2,16 @@ import { useRef, useState } from 'react';
 import { Moon, Sun, Upload, Download, FolderUp, Activity, Trash2, HeartPulse, CloudUpload } from 'lucide-react';
 import { Button } from '../ui/Button.tsx';
 import { useAppStore } from '../../store/activityStore.ts';
-import { db, exportBackupJSON, importBackupJSON, type BackupData } from '../../lib/storage.ts';
+import { exportBackupJSON, importBackupJSON, type BackupData } from '../../lib/storage.ts';
+import { api } from '../../lib/api.ts';
 import { isGistSyncConfigured, syncToGist } from '../../lib/gistSync.ts';
 
 interface HeaderProps {
   onDataCleared: () => void;
+  currentUser?: string;
 }
 
-export function Header({ onDataCleared }: HeaderProps) {
+export function Header({ onDataCleared, currentUser }: HeaderProps) {
   const theme = useAppStore((s) => s.theme);
   const toggleTheme = useAppStore((s) => s.toggleTheme);
   const setImportModalOpen = useAppStore((s) => s.setImportModalOpen);
@@ -18,8 +20,9 @@ export function Header({ onDataCleared }: HeaderProps) {
   const [syncing, setSyncing] = useState(false);
 
   const handleClear = async () => {
-    if (!window.confirm('Delete all activities? This cannot be undone.')) return;
-    await db.activities.clear();
+    if (!window.confirm('Delete all activities and body logs? This cannot be undone.')) return;
+    await api.activities.clear();
+    await api.bodyLogs.clear();
     onDataCleared();
   };
 
@@ -70,40 +73,40 @@ export function Header({ onDataCleared }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-700 bg-slate-800/80 backdrop-blur px-6 py-3">
-      <div className="flex items-center gap-3">
-        <Activity className="text-orange-500" size={24} />
-        <h1 className="text-lg font-bold text-slate-100">Fitness Calendar</h1>
+    <header className="flex items-center justify-between border-b border-slate-700 bg-slate-800/80 backdrop-blur px-3 sm:px-6 py-2 sm:py-3">
+      <div className="flex items-center gap-2 sm:gap-3">
+        <Activity className="text-orange-500 shrink-0" size={24} />
+        <h1 className="text-lg font-bold text-slate-100 hidden sm:block">Fitness Calendar</h1>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
         <Button variant="ghost" size="sm" onClick={handleClear}>
           <Trash2 size={14} />
-          Clear
+          <span className="hidden sm:inline">Clear</span>
         </Button>
         <Button variant="ghost" size="sm" onClick={handleExport}>
           <Download size={14} />
-          Export
+          <span className="hidden sm:inline">Export</span>
         </Button>
-        {isGistSyncConfigured() && (
+        {isGistSyncConfigured() && currentUser === 'nick' && (
           <Button variant="ghost" size="sm" onClick={handleSync} disabled={syncing}>
             <CloudUpload size={14} />
-            {syncing ? 'Syncing…' : 'Sync'}
+            <span className="hidden sm:inline">{syncing ? 'Syncing\u2026' : 'Sync'}</span>
           </Button>
         )}
         <label>
           <input ref={restoreInputRef} type="file" accept=".json" className="hidden" onChange={handleRestore} />
           <Button variant="ghost" size="sm" onClick={() => restoreInputRef.current?.click()}>
             <FolderUp size={14} />
-            Restore
+            <span className="hidden sm:inline">Restore</span>
           </Button>
         </label>
         <Button variant="ghost" size="sm" onClick={() => setBodyTrackerOpen(true)}>
           <HeartPulse size={14} />
-          Body Log
+          <span className="hidden sm:inline">Body Log</span>
         </Button>
         <Button variant="primary" size="sm" onClick={() => setImportModalOpen(true)}>
           <Upload size={14} />
-          Import
+          <span className="hidden sm:inline">Import</span>
         </Button>
         <Button variant="ghost" size="sm" onClick={toggleTheme}>
           {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}

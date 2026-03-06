@@ -1,4 +1,4 @@
-import { exportBackupJSON } from './storage.ts';
+import { api } from './api.ts';
 
 const GIST_API = 'https://api.github.com/gists';
 const GIST_FILENAME = 'fitness_data.json';
@@ -22,7 +22,7 @@ export async function syncToGist(): Promise<{ success: boolean; error?: string }
   }
 
   try {
-    const data = await exportBackupJSON();
+    const data = await api.export();
 
     const resp = await fetch(`${GIST_API}/${gistId}`, {
       method: 'PATCH',

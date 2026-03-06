@@ -1,0 +1,16 @@
+[Unit]
+Description=Fitness Calendar API
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/opt/fitness-calendar/backend
+ExecStart=/opt/fitness-calendar/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8001
+Restart=on-failure
+RestartSec=5
+Environment=DATABASE_URL=sqlite:////opt/fitness-calendar/data/fitness.db
+Environment=STATIC_DIR=/opt/fitness-calendar/dist
+
+[Install]
+WantedBy=multi-user.target

@@ -1,16 +1,19 @@
 import { useEffect, useCallback } from 'react';
 import { AppShell } from './components/layout/AppShell.tsx';
 import { SidePanel } from './components/layout/SidePanel.tsx';
+import { MobileStatsBar } from './components/layout/MobileStatsBar.tsx';
 import { CalendarView } from './components/calendar/CalendarView.tsx';
 import { ImportModal } from './components/import/ImportModal.tsx';
 import { BodyTrackerModal } from './components/body/BodyTrackerModal.tsx';
 import { useCalendarNavigation } from './hooks/useCalendarNavigation.ts';
 import { useActivities } from './hooks/useActivities.ts';
 import { useBodyLogs } from './hooks/useBodyLogs.ts';
+import { useCurrentUser } from './hooks/useCurrentUser.ts';
 import { useAppStore } from './store/activityStore.ts';
 import type { Activity } from './types/activity.ts';
 
 export default function App() {
+  const { user } = useCurrentUser();
   const { anchorDate, viewMode, title, dateRange, setViewMode, goNext, goPrev, goToday, drillDown } =
     useCalendarNavigation();
   const { activities, loading, remove, bulkAddDeduped, refresh } = useActivities(dateRange.startKey, dateRange.endKey);
@@ -49,7 +52,10 @@ export default function App() {
   }, [refresh, refreshBodyLogs]);
 
   return (
-    <AppShell onDataCleared={handleDataCleared}>
+    <AppShell onDataCleared={handleDataCleared} currentUser={user?.username}>
+      <div className="md:hidden">
+        <MobileStatsBar activities={activities} />
+      </div>
       <main className="flex-1 flex flex-col min-h-0 min-w-0">
         {loading ? (
           <div className="flex-1 flex items-center justify-center text-slate-500">Loading...</div>
@@ -69,7 +75,9 @@ export default function App() {
           />
         )}
       </main>
-      <SidePanel activities={activities} bodyLogs={bodyLogs} viewMode={viewMode} dateRange={dateRange} />
+      <div className="hidden md:flex">
+        <SidePanel activities={activities} bodyLogs={bodyLogs} viewMode={viewMode} dateRange={dateRange} />
+      </div>
       <ImportModal
         open={importModalOpen}
         onClose={() => setImportModalOpen(false)}

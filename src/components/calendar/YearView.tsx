@@ -35,8 +35,8 @@ export function YearView({ anchorDate, activities, onMonthClick }: YearViewProps
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6">
-      <div className="grid grid-cols-4 gap-6 max-w-5xl mx-auto">
+    <div className="flex-1 overflow-y-auto p-3 sm:p-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 sm:gap-6 max-w-5xl mx-auto">
         {months.map((month) => {
           const mStart = startOfMonth(month);
           const mEnd = endOfMonth(month);

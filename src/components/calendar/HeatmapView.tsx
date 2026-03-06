@@ -101,7 +101,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
   const topPad = 20;
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center overflow-auto p-6">
+    <div className="flex-1 flex flex-col items-center justify-start sm:justify-center overflow-auto p-3 sm:p-6">
       <svg
         width={leftPad + weeks.length * (cellSize + cellGap) + 10}
         height={topPad + 7 * (cellSize + cellGap) + 30}

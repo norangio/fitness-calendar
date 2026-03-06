@@ -1,0 +1,32 @@
+# Add this block to /etc/caddy/Caddyfile on the Hetzner server.
+# Then run: sudo systemctl reload caddy
+#
+# To add a new user:
+#   caddy hash-password --plaintext "theirpassword"
+#   Add the username + hash to the basicauth block below.
+
+fitness.norangio.dev {
+    basicauth {
+        # Generate hash with: caddy hash-password --plaintext "yourpassword"
+        nick $2a$14$REPLACE_WITH_REAL_HASH
+        dad  $2a$14$REPLACE_WITH_REAL_HASH
+    }
+
+    # Proxy API requests to the FastAPI backend
+    # header_up forwards the authenticated username so the backend can scope data per-user
+    handle /api/* {
+        reverse_proxy localhost:8001 {
+            header_up X-Remote-User {http.auth.user.id}
+        }
+    }
+
+    # Proxy static assets (hashed filenames, served by FastAPI)
+    handle /assets/* {
+        reverse_proxy localhost:8001
+    }
+
+    # All other requests: FastAPI serves index.html for SPA routing
+    handle {
+        reverse_proxy localhost:8001
+    }
+}
