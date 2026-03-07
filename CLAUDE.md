@@ -122,3 +122,11 @@ Logs:    journalctl -u fitness-calendar -f
 - Components are functional with TypeScript interfaces for props
 - No CSS modules — all Tailwind utility classes
 - Modal components render `null` when `!open`
+
+## Known Bugs
+
+### Light/dark mode toggle not working in production
+- **Status**: Open
+- **Symptom**: Clicking the Sun/Moon toggle button in the header does nothing visually on the deployed server. Works correctly in local dev.
+- **What's been tried**: Tailwind v4 `@custom-variant dark` configured, `classList.toggle` wired in both `useEffect` (App.tsx) and directly in `toggleTheme` action (activityStore.ts), store-level initialization applied before React mounts. CSS `dark:` variants compile correctly, JS bundle contains the right code, files checksums match local and server. Root cause unknown.
+- **Files involved**: `src/store/activityStore.ts`, `src/App.tsx`, `src/index.css`
