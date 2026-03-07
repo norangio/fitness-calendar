@@ -118,6 +118,7 @@ The server script:
 - builds frontend assets with `npm ci && npm run build`
 - installs backend dependencies
 - restarts `fitness-calendar` systemd service
+- bootstrap sync keeps `data/` and `.env` while cleaning stale rsync files
 
 > Note: Node.js 20+ and npm must be installed on the VPS for frontend build.
 

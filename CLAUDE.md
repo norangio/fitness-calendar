@@ -116,6 +116,7 @@ Logs:    journalctl -u fitness-calendar -f
 - Required GitHub secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`
 - The workflow bootstraps/syncs `/opt/fitness-calendar` from GitHub before deployment
 - `deploy/server-deploy.sh` auto-installs Node.js 20/npm if missing on VPS
+- Bootstrap sync preserves `data/` and `.env`, while cleaning stale app files
 
 ### Patterns
 - All date keys use `'yyyy-MM-dd'` format
