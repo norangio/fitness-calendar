@@ -112,8 +112,8 @@ App dir: /opt/fitness-calendar/
 Service: systemctl status fitness-calendar
 Logs:    journalctl -u fitness-calendar -f
 ```
-
-<!-- TODO: Set up GitHub Actions to auto-deploy on push to main (SSH + deploy/server-deploy.sh main) -->
+- GitHub Actions auto-deploy: `.github/workflows/deploy.yml` on push to `main`
+- Required GitHub secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`
 
 ### Patterns
 - All date keys use `'yyyy-MM-dd'` format
