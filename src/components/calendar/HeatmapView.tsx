@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { startOfYear, endOfYear, startOfWeek, eachDayOfInterval, format, getDay } from '../../lib/dateUtils.ts';
 import type { Activity } from '../../types/activity.ts';
+import { useAppStore } from '../../store/activityStore.ts';
 
 interface HeatmapViewProps {
   anchorDate: Date;
@@ -10,7 +11,6 @@ interface HeatmapViewProps {
 
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
-const EMPTY_COLOR = '#334155'; // slate-700
 const INTENSITY_COLORS = [
   '#7c2d12', // orange-900
   '#c2410c', // orange-700
@@ -18,8 +18,8 @@ const INTENSITY_COLORS = [
   '#fb923c', // orange-400
 ];
 
-function getIntensityColor(minutes: number): string {
-  if (minutes === 0) return EMPTY_COLOR;
+function getIntensityColor(minutes: number, emptyColor: string): string {
+  if (minutes === 0) return emptyColor;
   if (minutes < 30) return INTENSITY_COLORS[0];
   if (minutes < 60) return INTENSITY_COLORS[1];
   if (minutes < 120) return INTENSITY_COLORS[2];
@@ -36,6 +36,12 @@ function getIntensityLabel(minutes: number): string {
 
 export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewProps) {
   const [tooltip, setTooltip] = useState<{ x: number; y: number; text: string } | null>(null);
+  const theme = useAppStore((s) => s.theme);
+
+  const isDark = theme === 'dark';
+  const emptyColor = isDark ? '#334155' : '#e2e8f0'; // slate-700 / slate-200
+  const labelColor = isDark ? '#94a3b8' : '#64748b';  // slate-400 / slate-500
+  const subLabelColor = isDark ? '#64748b' : '#94a3b8';
 
   // Filter out "other" category, then build minute/count maps
   const filteredActivities = useMemo(
@@ -113,7 +119,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
             key={label}
             x={leftPad + col * (cellSize + cellGap)}
             y={topPad - 6}
-            fill="#94a3b8"
+            fill={labelColor}
             fontSize={10}
           >
             {label}
@@ -127,7 +133,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
               key={i}
               x={leftPad - 6}
               y={topPad + i * (cellSize + cellGap) + cellSize - 2}
-              fill="#64748b"
+              fill={subLabelColor}
               fontSize={10}
               textAnchor="end"
             >
@@ -158,7 +164,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
                 width={cellSize}
                 height={cellSize}
                 rx={2}
-                fill={getIntensityColor(mins)}
+                fill={getIntensityColor(mins, emptyColor)}
                 opacity={mins === 0 ? 0.4 : 1}
                 className="cursor-pointer"
                 stroke="transparent"
@@ -183,10 +189,10 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
         )}
 
         {/* Legend */}
-        <text x={leftPad} y={topPad + 7 * (cellSize + cellGap) + 18} fill="#64748b" fontSize={10}>
+        <text x={leftPad} y={topPad + 7 * (cellSize + cellGap) + 18} fill={subLabelColor} fontSize={10}>
           Less
         </text>
-        {[EMPTY_COLOR, ...INTENSITY_COLORS].map((color, i) => (
+        {[emptyColor, ...INTENSITY_COLORS].map((color, i) => (
           <rect
             key={i}
             x={leftPad + 30 + i * (cellSize + 3)}
@@ -201,7 +207,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
         <text
           x={leftPad + 30 + 5 * (cellSize + 3) + 4}
           y={topPad + 7 * (cellSize + cellGap) + 18}
-          fill="#64748b"
+          fill={subLabelColor}
           fontSize={10}
         >
           More
@@ -211,7 +217,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-50 rounded-lg bg-slate-800 border border-slate-600 px-3 py-1.5 text-xs text-slate-200 pointer-events-none shadow-lg"
+          className="fixed z-50 rounded-lg bg-white border border-slate-200 px-3 py-1.5 text-xs text-slate-800 pointer-events-none shadow-lg dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
           style={{ left: tooltip.x + 12, top: tooltip.y - 10 }}
         >
           {tooltip.text}

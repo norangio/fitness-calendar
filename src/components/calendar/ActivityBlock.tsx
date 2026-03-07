@@ -27,8 +27,8 @@ export function ActivityBlock({ activity, compact = false, onClick }: ActivityBl
       style={{ backgroundColor: config.color + '20', borderLeft: `3px solid ${config.color}` }}
       onClick={() => onClick?.(activity)}
     >
-      <span className="font-medium text-slate-200 truncate">{activity.title}</span>
-      <span className="text-slate-400 shrink-0">{Math.round(activity.durationMinutes)}m</span>
+      <span className="font-medium text-slate-800 truncate dark:text-slate-200">{activity.title}</span>
+      <span className="text-slate-500 shrink-0 dark:text-slate-400">{Math.round(activity.durationMinutes)}m</span>
     </div>
   );
 }

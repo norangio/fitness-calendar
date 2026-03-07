@@ -14,8 +14,8 @@ export function Button({ variant = 'secondary', size = 'md', className = '', chi
   };
   const variants = {
     primary: 'bg-orange-500 text-white hover:bg-orange-600',
-    secondary: 'bg-slate-700 text-slate-200 hover:bg-slate-600 dark:bg-slate-700 dark:hover:bg-slate-600',
-    ghost: 'text-slate-400 hover:text-slate-200 hover:bg-slate-700/50',
+    secondary: 'bg-slate-200 text-slate-800 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600',
+    ghost: 'text-slate-500 hover:text-slate-900 hover:bg-slate-200/70 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-700/50',
   };
 
   return (

@@ -54,33 +54,33 @@ export function ImportModal({ open, onClose, onImport }: ImportModalProps) {
       {importResult ? (
         <div className="flex flex-col items-center gap-3 py-6">
           <Check className="text-green-400" size={40} />
-          <p className="text-slate-200 font-medium">{importResult.added} new {importResult.added === 1 ? 'activity' : 'activities'} added</p>
+          <p className="text-slate-800 font-medium dark:text-slate-200">{importResult.added} new {importResult.added === 1 ? 'activity' : 'activities'} added</p>
           {importResult.skipped > 0 && (
-            <p className="text-sm text-slate-400">{importResult.skipped} duplicate{importResult.skipped === 1 ? '' : 's'} skipped</p>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{importResult.skipped} duplicate{importResult.skipped === 1 ? '' : 's'} skipped</p>
           )}
           <Button variant="primary" onClick={handleClose}>Done</Button>
         </div>
       ) : !result ? (
         <div>
           <div
-            className="border-2 border-dashed border-slate-600 rounded-xl p-10 text-center hover:border-orange-500/50 transition-colors"
+            className="border-2 border-dashed border-slate-300 rounded-xl p-10 text-center hover:border-orange-500/50 transition-colors dark:border-slate-600"
             onDragOver={(e) => e.preventDefault()}
             onDrop={handleDrop}
           >
-            <Upload className="mx-auto text-slate-500 mb-3" size={32} />
-            <p className="text-sm text-slate-300 mb-1">Drag & drop your Garmin CSV export here</p>
-            <p className="text-xs text-slate-500 mb-4">or click to browse</p>
+            <Upload className="mx-auto text-slate-400 mb-3 dark:text-slate-500" size={32} />
+            <p className="text-sm text-slate-700 mb-1 dark:text-slate-300">Drag & drop your Garmin CSV export here</p>
+            <p className="text-xs text-slate-400 mb-4 dark:text-slate-500">or click to browse</p>
             <label className="inline-block">
               <input type="file" accept=".csv" className="hidden" onChange={handleFileSelect} />
-              <span className="inline-flex items-center gap-2 rounded-lg bg-slate-700 text-slate-200 px-4 py-2 text-sm cursor-pointer hover:bg-slate-600">
+              <span className="inline-flex items-center gap-2 rounded-lg bg-slate-200 text-slate-800 px-4 py-2 text-sm cursor-pointer hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600">
                 <FileText size={14} />
                 Browse Files
               </span>
             </label>
           </div>
-          {parsing && <p className="text-sm text-slate-400 mt-3 text-center">Parsing...</p>}
+          {parsing && <p className="text-sm text-slate-500 mt-3 text-center dark:text-slate-400">Parsing...</p>}
           {error && (
-            <div className="flex items-center gap-2 mt-3 text-red-400 text-sm">
+            <div className="flex items-center gap-2 mt-3 text-red-500 text-sm dark:text-red-400">
               <AlertCircle size={14} />
               {error}
             </div>
@@ -89,17 +89,17 @@ export function ImportModal({ open, onClose, onImport }: ImportModalProps) {
       ) : (
         <div>
           <div className="mb-4">
-            <p className="text-sm text-slate-300">
-              Found <span className="font-bold text-slate-100">{result.activities.length}</span> activities
-              {result.skipped > 0 && <span className="text-slate-500"> ({result.skipped} skipped)</span>}
+            <p className="text-sm text-slate-700 dark:text-slate-300">
+              Found <span className="font-bold text-slate-900 dark:text-slate-100">{result.activities.length}</span> activities
+              {result.skipped > 0 && <span className="text-slate-400 dark:text-slate-500"> ({result.skipped} skipped)</span>}
             </p>
           </div>
 
           {/* Preview */}
-          <div className="max-h-60 overflow-y-auto rounded-lg bg-slate-900/50 border border-slate-700">
+          <div className="max-h-60 overflow-y-auto rounded-lg bg-slate-100 border border-slate-200 dark:bg-slate-900/50 dark:border-slate-700">
             <table className="w-full text-xs">
-              <thead className="sticky top-0 bg-slate-800">
-                <tr className="text-left text-slate-400">
+              <thead className="sticky top-0 bg-slate-200 dark:bg-slate-800">
+                <tr className="text-left text-slate-600 dark:text-slate-400">
                   <th className="px-3 py-2">Type</th>
                   <th className="px-3 py-2">Title</th>
                   <th className="px-3 py-2">Date</th>
@@ -110,30 +110,30 @@ export function ImportModal({ open, onClose, onImport }: ImportModalProps) {
                 {result.activities.slice(0, 20).map((a) => {
                   const config = ACTIVITY_TYPES[a.type];
                   return (
-                    <tr key={a.id} className="border-t border-slate-700/50">
+                    <tr key={a.id} className="border-t border-slate-200 dark:border-slate-700/50">
                       <td className="px-3 py-1.5">
                         <span className="flex items-center gap-1.5">
                           <span className="w-2 h-2 rounded-full" style={{ backgroundColor: config.color }} />
-                          <span className="text-slate-300">{config.label}</span>
+                          <span className="text-slate-700 dark:text-slate-300">{config.label}</span>
                         </span>
                       </td>
-                      <td className="px-3 py-1.5 text-slate-300 max-w-[150px] truncate">{a.title}</td>
-                      <td className="px-3 py-1.5 text-slate-400">{a.date}</td>
-                      <td className="px-3 py-1.5 text-slate-400">{Math.round(a.durationMinutes)}m</td>
+                      <td className="px-3 py-1.5 text-slate-700 max-w-[150px] truncate dark:text-slate-300">{a.title}</td>
+                      <td className="px-3 py-1.5 text-slate-500 dark:text-slate-400">{a.date}</td>
+                      <td className="px-3 py-1.5 text-slate-500 dark:text-slate-400">{Math.round(a.durationMinutes)}m</td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
             {result.activities.length > 20 && (
-              <p className="text-xs text-slate-500 text-center py-2">
+              <p className="text-xs text-slate-400 text-center py-2 dark:text-slate-500">
                 ...and {result.activities.length - 20} more
               </p>
             )}
           </div>
 
           {result.errors.length > 0 && (
-            <div className="mt-3 text-xs text-yellow-400">
+            <div className="mt-3 text-xs text-yellow-600 dark:text-yellow-400">
               {result.errors.length} parsing warnings
             </div>
           )}

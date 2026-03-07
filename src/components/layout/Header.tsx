@@ -73,10 +73,10 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
   };
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-700 bg-slate-800/80 backdrop-blur px-3 sm:px-6 py-2 sm:py-3">
+    <header className="flex items-center justify-between border-b border-slate-200 bg-white/80 backdrop-blur px-3 sm:px-6 py-2 sm:py-3 dark:border-slate-700 dark:bg-slate-800/80">
       <div className="flex items-center gap-2 sm:gap-3">
         <Activity className="text-orange-500 shrink-0" size={24} />
-        <h1 className="text-lg font-bold text-slate-100 hidden sm:block">Fitness Calendar</h1>
+        <h1 className="text-lg font-bold text-slate-900 hidden sm:block dark:text-slate-100">Fitness Calendar</h1>
       </div>
       <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
         <Button variant="ghost" size="sm" onClick={handleClear}>

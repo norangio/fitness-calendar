@@ -9,6 +9,7 @@ import {
   eachMonthOfInterval,
   startOfWeek,
 } from '../../lib/dateUtils.ts';
+import { useAppStore } from '../../store/activityStore.ts';
 
 interface BodyLogChartProps {
   bodyLogs: BodyLogEntry[];
@@ -76,6 +77,16 @@ function buildBuckets(viewMode: ViewMode, dateRange: { start: Date; end: Date })
 }
 
 export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProps) {
+  const theme = useAppStore((s) => s.theme);
+  const isDark = theme === 'dark';
+
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+  const tickColor = isDark ? '#94a3b8' : '#64748b';
+  const tooltipBg = isDark ? '#1e293b' : '#ffffff';
+  const tooltipBorder = isDark ? '#334155' : '#e2e8f0';
+  const tooltipLabel = isDark ? '#94a3b8' : '#64748b';
+  const labelColor = isDark ? '#64748b' : '#94a3b8';
+
   const categories = useMemo(() => {
     const cats = new Set(bodyLogs.map((b) => b.category));
     return [...cats] as PainCategory[];
@@ -115,7 +126,7 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
 
   if (categories.length === 0) {
     return (
-      <div className="flex items-center justify-center h-36 text-slate-500 text-sm">
+      <div className="flex items-center justify-center h-36 text-slate-400 text-sm dark:text-slate-500">
         No body log data to chart
       </div>
     );
@@ -125,29 +136,29 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
     <div className="h-44">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 10, fill: '#94a3b8' }}
-            axisLine={{ stroke: '#334155' }}
+            tick={{ fontSize: 10, fill: tickColor }}
+            axisLine={{ stroke: gridColor }}
             tickLine={false}
           />
           <YAxis
             domain={[1, 5]}
             ticks={[1, 2, 3, 4, 5]}
-            tick={{ fontSize: 10, fill: '#94a3b8' }}
+            tick={{ fontSize: 10, fill: tickColor }}
             axisLine={false}
             tickLine={false}
-            label={{ value: 'severity', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: '#64748b' } }}
+            label={{ value: 'severity', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: labelColor } }}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #334155',
+              backgroundColor: tooltipBg,
+              border: `1px solid ${tooltipBorder}`,
               borderRadius: '8px',
               fontSize: '12px',
             }}
-            labelStyle={{ color: '#94a3b8' }}
+            labelStyle={{ color: tooltipLabel }}
             formatter={((value?: number, name?: string) => {
               if (value == null) return ['-', name ?? ''];
               const config = categoryConfigs[(name ?? '')];
@@ -173,7 +184,7 @@ export function BodyLogChart({ bodyLogs, viewMode, dateRange }: BodyLogChartProp
       {/* Legend */}
       <div className="flex flex-wrap gap-3 mt-2">
         {categories.map((cat) => (
-          <div key={cat} className="flex items-center gap-1.5 text-xs text-slate-400">
+          <div key={cat} className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: categoryConfigs[cat].color }} />
             {categoryConfigs[cat].label}
           </div>

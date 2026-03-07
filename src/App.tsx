@@ -22,6 +22,11 @@ export default function App() {
   const setImportModalOpen = useAppStore((s) => s.setImportModalOpen);
   const bodyTrackerOpen = useAppStore((s) => s.bodyTrackerOpen);
   const setBodyTrackerOpen = useAppStore((s) => s.setBodyTrackerOpen);
+  const theme = useAppStore((s) => s.theme);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
 
   // Keyboard navigation
   useEffect(() => {

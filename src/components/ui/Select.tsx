@@ -7,7 +7,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 export function Select({ options, className = '', ...props }: SelectProps) {
   return (
     <select
-      className={`rounded-lg bg-slate-700 text-slate-200 border border-slate-600 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50 ${className}`}
+      className={`rounded-lg bg-slate-100 text-slate-800 border border-slate-300 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50 dark:bg-slate-700 dark:text-slate-200 dark:border-slate-600 ${className}`}
       {...props}
     >
       {options.map((opt) => (

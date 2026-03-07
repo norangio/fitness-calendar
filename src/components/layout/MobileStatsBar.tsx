@@ -11,12 +11,12 @@ export function MobileStatsBar({ activities }: MobileStatsBarProps) {
   const uniqueTypes = [...new Set(activities.map((a) => a.type))];
 
   return (
-    <details className="border-b border-slate-700 bg-slate-800/50">
-      <summary className="flex items-center gap-3 px-4 py-2 text-xs text-slate-400 cursor-pointer select-none">
-        <span className="font-medium text-slate-200">{activities.length}</span> activities
-        <span className="text-slate-600">|</span>
-        <span className="font-medium text-slate-200">{totalHours}h</span> total
-        <span className="ml-auto text-slate-500">Details</span>
+    <details className="border-b border-slate-200 bg-slate-100/50 dark:border-slate-700 dark:bg-slate-800/50">
+      <summary className="flex items-center gap-3 px-4 py-2 text-xs text-slate-500 cursor-pointer select-none dark:text-slate-400">
+        <span className="font-medium text-slate-800 dark:text-slate-200">{activities.length}</span> activities
+        <span className="text-slate-400 dark:text-slate-600">|</span>
+        <span className="font-medium text-slate-800 dark:text-slate-200">{totalHours}h</span> total
+        <span className="ml-auto text-slate-400 dark:text-slate-500">Details</span>
       </summary>
       <div className="px-4 pb-3 space-y-1.5">
         {uniqueTypes.map((type) => {
@@ -27,9 +27,9 @@ export function MobileStatsBar({ activities }: MobileStatsBarProps) {
             <div key={type} className="flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full" style={{ backgroundColor: config.color }} />
-                <span className="text-slate-300">{config.label}</span>
+                <span className="text-slate-700 dark:text-slate-300">{config.label}</span>
               </div>
-              <span className="text-slate-400">{count} &middot; {Math.round(mins / 6) / 10}h</span>
+              <span className="text-slate-500 dark:text-slate-400">{count} &middot; {Math.round(mins / 6) / 10}h</span>
             </div>
           );
         })}

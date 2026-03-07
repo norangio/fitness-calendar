@@ -29,34 +29,34 @@ export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="px-5 py-3 border-b border-slate-700">
+      <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-3">
           <div className={`text-3xl font-bold w-12 h-12 flex items-center justify-center rounded-full ${
-            today ? 'bg-orange-500 text-white' : 'text-slate-200'
+            today ? 'bg-orange-500 text-white' : 'text-slate-800 dark:text-slate-200'
           }`}>
             {format(anchorDate, 'd')}
           </div>
           <div>
-            <div className="text-sm text-slate-400">{format(anchorDate, 'EEEE')}</div>
-            <div className="text-sm text-slate-500">{dayActivities.length} activities</div>
+            <div className="text-sm text-slate-500 dark:text-slate-400">{format(anchorDate, 'EEEE')}</div>
+            <div className="text-sm text-slate-400 dark:text-slate-500">{dayActivities.length} activities</div>
           </div>
         </div>
       </div>
 
       {dayBodyLogs.length > 0 && (
-        <div className="px-5 py-3 border-b border-slate-700">
-          <h3 className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Body Log</h3>
+        <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700">
+          <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2 dark:text-slate-400">Body Log</h3>
           <div className="space-y-2">
             {dayBodyLogs.map((entry) => (
               <div
                 key={entry.id}
-                className={`rounded-lg bg-slate-700/40 p-3 border-l-4 ${SEVERITY_COLORS[entry.severity]}`}
+                className={`rounded-lg bg-slate-100 p-3 border-l-4 dark:bg-slate-700/40 ${SEVERITY_COLORS[entry.severity]}`}
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium text-slate-200 capitalize">{entry.category} pain</span>
-                  <span className="text-xs text-slate-400">{SEVERITY_LABELS[entry.severity]} ({entry.severity}/5)</span>
+                  <span className="text-sm font-medium text-slate-800 capitalize dark:text-slate-200">{entry.category} pain</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{SEVERITY_LABELS[entry.severity]} ({entry.severity}/5)</span>
                 </div>
-                {entry.notes && <p className="text-xs text-slate-400 mt-1">{entry.notes}</p>}
+                {entry.notes && <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">{entry.notes}</p>}
               </div>
             ))}
           </div>
@@ -65,17 +65,17 @@ export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick
 
       <div className="flex-1 overflow-y-auto">
         {dayActivities.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+          <div className="flex items-center justify-center h-full text-slate-400 text-sm dark:text-slate-500">
             No activities on this day
           </div>
         ) : (
           <div className="grid grid-cols-[60px_1fr] relative">
             {HOURS.map((hour) => (
               <div key={hour} className="contents">
-                <div className="h-14 border-b border-slate-700/30 pr-2 text-right text-[10px] text-slate-500 pt-0.5">
+                <div className="h-14 border-b border-slate-200 pr-2 text-right text-[10px] text-slate-400 pt-0.5 dark:border-slate-700/30 dark:text-slate-500">
                   {hour === 0 ? '' : `${hour}:00`}
                 </div>
-                <div className="h-14 border-b border-slate-700/30" />
+                <div className="h-14 border-b border-slate-200 dark:border-slate-700/30" />
               </div>
             ))}
 
@@ -99,8 +99,8 @@ export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick
                   }}
                   onClick={() => onActivityClick(activity)}
                 >
-                  <div className="text-sm font-medium text-slate-200">{activity.title}</div>
-                  <div className="text-xs text-slate-400">
+                  <div className="text-sm font-medium text-slate-800 dark:text-slate-200">{activity.title}</div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">
                     {Math.round(activity.durationMinutes)} min
                     {activity.calories ? ` · ${activity.calories} cal` : ''}
                   </div>

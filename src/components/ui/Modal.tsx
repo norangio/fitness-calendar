@@ -30,14 +30,14 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
             onClick={onClose}
           />
           <motion.div
-            className="relative z-10 w-full max-w-lg rounded-xl bg-slate-800 border border-slate-700 shadow-2xl"
+            className="relative z-10 w-full max-w-lg rounded-xl bg-white border border-slate-200 shadow-2xl dark:bg-slate-800 dark:border-slate-700"
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
           >
-            <div className="flex items-center justify-between border-b border-slate-700 px-6 py-4">
-              <h2 className="text-lg font-semibold text-slate-100">{title}</h2>
-              <button onClick={onClose} className="text-slate-400 hover:text-slate-200 cursor-pointer">
+            <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4 dark:border-slate-700">
+              <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h2>
+              <button onClick={onClose} className="text-slate-500 hover:text-slate-900 cursor-pointer dark:text-slate-400 dark:hover:text-slate-200">
                 <X size={20} />
               </button>
             </div>

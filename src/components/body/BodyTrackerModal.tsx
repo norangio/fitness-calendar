@@ -98,30 +98,30 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={onClose}>
       <div
-        className="bg-slate-800 border border-slate-700 rounded-xl shadow-2xl w-full max-w-md p-6"
+        className="bg-white border border-slate-200 rounded-xl shadow-2xl w-full max-w-md p-6 dark:bg-slate-800 dark:border-slate-700"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-semibold text-slate-100">Body Log</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-200 cursor-pointer">
+          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">Body Log</h2>
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-900 cursor-pointer dark:text-slate-400 dark:hover:text-slate-200">
             <X size={18} />
           </button>
         </div>
 
         {/* Date */}
         <div className="mb-4">
-          <label className="block text-xs font-medium text-slate-400 mb-1">Date</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1 dark:text-slate-400">Date</label>
           <input
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            className="w-full rounded-lg bg-slate-700 border border-slate-600 px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-orange-500"
+            className="w-full rounded-lg bg-slate-100 border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-orange-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200"
           />
         </div>
 
         {/* Categories */}
         <div className="mb-4">
-          <label className="block text-xs font-medium text-slate-400 mb-2">Body Part</label>
+          <label className="block text-xs font-medium text-slate-500 mb-2 dark:text-slate-400">Body Part</label>
           <div className="flex flex-wrap gap-2">
             {PRESET_CATEGORIES.map((cat) => (
               <button
@@ -130,7 +130,7 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
                   selectedCategories.includes(cat.value)
                     ? 'bg-orange-500 text-white'
-                    : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600'
                 }`}
               >
                 {cat.label}
@@ -154,7 +154,7 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
               onChange={(e) => setCustomCategory(e.target.value)}
               onKeyDown={handleCustomKeyDown}
               placeholder="Other body part…"
-              className="flex-1 rounded-lg bg-slate-700 border border-slate-600 px-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-orange-500"
+              className="flex-1 rounded-lg bg-slate-100 border border-slate-300 px-3 py-1.5 text-sm text-slate-800 focus:outline-none focus:border-orange-500 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200"
             />
             <Button
               variant="ghost"
@@ -169,7 +169,7 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
 
         {/* Severity */}
         <div className="mb-4">
-          <label className="block text-xs font-medium text-slate-400 mb-2">
+          <label className="block text-xs font-medium text-slate-500 mb-2 dark:text-slate-400">
             Severity: {SEVERITY_LABELS[severity]}
           </label>
           <div className="flex gap-2">
@@ -180,7 +180,7 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
                 className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all cursor-pointer ${
                   severity === level
                     ? `${SEVERITY_COLORS[level]} text-white ring-2 ring-white/30`
-                    : 'bg-slate-700 text-slate-400 hover:bg-slate-600'
+                    : 'bg-slate-200 text-slate-500 hover:bg-slate-300 dark:bg-slate-700 dark:text-slate-400 dark:hover:bg-slate-600'
                 }`}
               >
                 {level}
@@ -191,13 +191,13 @@ export function BodyTrackerModal({ open, onClose, onSave }: BodyTrackerModalProp
 
         {/* Notes */}
         <div className="mb-5">
-          <label className="block text-xs font-medium text-slate-400 mb-1">Notes (optional)</label>
+          <label className="block text-xs font-medium text-slate-500 mb-1 dark:text-slate-400">Notes (optional)</label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="How does it feel?"
             rows={3}
-            className="w-full rounded-lg bg-slate-700 border border-slate-600 px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-orange-500 resize-none"
+            className="w-full rounded-lg bg-slate-100 border border-slate-300 px-3 py-2 text-sm text-slate-800 focus:outline-none focus:border-orange-500 resize-none dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200"
           />
         </div>
 

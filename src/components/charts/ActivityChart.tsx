@@ -2,6 +2,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaCh
 import type { Activity } from '../../types/activity.ts';
 import type { ViewMode } from '../../types/calendar.ts';
 import { useChartData } from '../../hooks/useChartData.ts';
+import { useAppStore } from '../../store/activityStore.ts';
 
 interface ActivityChartProps {
   activities: Activity[];
@@ -11,10 +12,19 @@ interface ActivityChartProps {
 
 export function ActivityChart({ activities, viewMode, dateRange }: ActivityChartProps) {
   const { data, series } = useChartData(activities, viewMode, dateRange);
+  const theme = useAppStore((s) => s.theme);
+  const isDark = theme === 'dark';
+
+  const gridColor = isDark ? '#334155' : '#e2e8f0';
+  const tickColor = isDark ? '#94a3b8' : '#64748b';
+  const tooltipBg = isDark ? '#1e293b' : '#ffffff';
+  const tooltipBorder = isDark ? '#334155' : '#e2e8f0';
+  const tooltipLabel = isDark ? '#94a3b8' : '#64748b';
+  const labelColor = isDark ? '#64748b' : '#94a3b8';
 
   if (series.length === 0) {
     return (
-      <div className="flex items-center justify-center h-48 text-slate-500 text-sm">
+      <div className="flex items-center justify-center h-48 text-slate-400 text-sm dark:text-slate-500">
         No activity data to chart
       </div>
     );
@@ -32,27 +42,27 @@ export function ActivityChart({ activities, viewMode, dateRange }: ActivityChart
               </linearGradient>
             ))}
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
           <XAxis
             dataKey="label"
-            tick={{ fontSize: 10, fill: '#94a3b8' }}
-            axisLine={{ stroke: '#334155' }}
+            tick={{ fontSize: 10, fill: tickColor }}
+            axisLine={{ stroke: gridColor }}
             tickLine={false}
           />
           <YAxis
-            tick={{ fontSize: 10, fill: '#94a3b8' }}
+            tick={{ fontSize: 10, fill: tickColor }}
             axisLine={false}
             tickLine={false}
-            label={{ value: 'hours', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: '#64748b' } }}
+            label={{ value: 'hours', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: labelColor } }}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1e293b',
-              border: '1px solid #334155',
+              backgroundColor: tooltipBg,
+              border: `1px solid ${tooltipBorder}`,
               borderRadius: '8px',
               fontSize: '12px',
             }}
-            labelStyle={{ color: '#94a3b8' }}
+            labelStyle={{ color: tooltipLabel }}
           />
           {series.map((s) => (
             <Area
@@ -73,7 +83,7 @@ export function ActivityChart({ activities, viewMode, dateRange }: ActivityChart
       {/* Legend */}
       <div className="flex flex-wrap gap-3 mt-2">
         {series.map((s) => (
-          <div key={s.type} className="flex items-center gap-1.5 text-xs text-slate-400">
+          <div key={s.type} className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400">
             <span className="w-2 h-2 rounded-full" style={{ backgroundColor: s.color }} />
             {s.label}
           </div>

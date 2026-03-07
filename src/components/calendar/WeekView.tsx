@@ -32,19 +32,19 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Day headers */}
-      <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] border-b border-slate-700">
+      <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] border-b border-slate-200 dark:border-slate-700">
         <div />
         {days.map((day) => {
           const today = isToday(day);
           return (
             <div
               key={day.toISOString()}
-              className="px-2 py-2 text-center cursor-pointer hover:bg-slate-700/30"
+              className="px-2 py-2 text-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/30"
               onClick={() => onDayClick(day)}
             >
-              <div className="text-xs text-slate-400">{format(day, 'EEE')}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">{format(day, 'EEE')}</div>
               <div className={`text-lg font-semibold mt-0.5 w-8 h-8 flex items-center justify-center rounded-full mx-auto ${
-                today ? 'bg-orange-500 text-white' : 'text-slate-200'
+                today ? 'bg-orange-500 text-white' : 'text-slate-800 dark:text-slate-200'
               }`}>
                 {format(day, 'd')}
               </div>
@@ -58,11 +58,11 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
         <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] relative min-w-[500px]">
           {HOURS.map((hour) => (
             <div key={hour} className="contents">
-              <div className="h-14 border-b border-slate-700/30 pr-2 text-right text-[10px] text-slate-500 pt-0.5">
+              <div className="h-14 border-b border-slate-200 pr-2 text-right text-[10px] text-slate-400 pt-0.5 dark:border-slate-700/30 dark:text-slate-500">
                 {hour === 0 ? '' : `${hour}:00`}
               </div>
               {days.map((day) => (
-                <div key={`${hour}-${day.toISOString()}`} className="h-14 border-b border-l border-slate-700/30" />
+                <div key={`${hour}-${day.toISOString()}`} className="h-14 border-b border-l border-slate-200 dark:border-slate-700/30" />
               ))}
             </div>
           ))}
