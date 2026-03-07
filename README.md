@@ -124,6 +124,7 @@ The server script:
 ### GitHub Actions Auto Deploy
 
 `.github/workflows/deploy.yml` deploys automatically on pushes to `main` (and supports manual runs).
+It bootstraps/syncs `/opt/fitness-calendar` from GitHub before running the server deploy script.
 
 Required repository secrets:
 - `VPS_HOST` (example: `5.78.109.38`)
@@ -139,6 +140,8 @@ ssh-keygen -t ed25519 -f ~/.ssh/github-actions-hetzner -C "github-actions-deploy
 cat ~/.ssh/github-actions-hetzner.pub | ssh root@5.78.109.38 'cat >> /root/.ssh/authorized_keys'
 ```
 Then paste `~/.ssh/github-actions-hetzner` (private key) into the `VPS_SSH_KEY` secret.
+
+If Node.js/npm are missing on the VPS, `deploy/server-deploy.sh` now installs Node.js 20 automatically before building.
 
 ```
 Server:  root@5.78.109.38
