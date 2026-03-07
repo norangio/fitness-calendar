@@ -94,7 +94,32 @@ The Vite dev proxy injects `X-Remote-User: nick` so the backend identifies you w
 
 ## Deployment
 
-Run `./deploy.sh` from the project root. It builds the frontend, rsyncs `dist/` and `backend/` to the server, and restarts the systemd service.
+Run `./deploy.sh` from the project root. Deploys use GitHub as the source of truth (no rsync from local machine).
+
+```bash
+# Push current branch to GitHub, then deploy that branch on VPS
+./deploy.sh
+
+# Deploy a specific branch
+./deploy.sh main
+
+# Skip local push (useful in CI/CD where code is already on GitHub)
+SKIP_PUSH=1 ./deploy.sh main
+```
+
+`./deploy.sh` SSHes to the server and runs:
+
+```bash
+bash /opt/fitness-calendar/deploy/server-deploy.sh main
+```
+
+The server script:
+- `git fetch/pull` from GitHub
+- builds frontend assets with `npm ci && npm run build`
+- installs backend dependencies
+- restarts `fitness-calendar` systemd service
+
+> Note: Node.js 20+ and npm must be installed on the VPS for frontend build.
 
 ```
 Server:  root@5.78.109.38

@@ -105,7 +105,7 @@ src/
 - Used by the email-reports pipeline to generate weekly fitness digest insights
 
 ### Deployment
-Run `./deploy.sh` from the project root. It builds the frontend, rsyncs `dist/` and `backend/` to the server, and restarts the systemd service. The server does **not** have a git clone — it runs the rsynced files directly.
+Run `./deploy.sh` from the project root. It pushes your branch to GitHub (unless `SKIP_PUSH=1`) then SSHes to the VPS and runs `deploy/server-deploy.sh`, which pulls from GitHub and deploys.
 
 ```
 App dir: /opt/fitness-calendar/
@@ -113,7 +113,7 @@ Service: systemctl status fitness-calendar
 Logs:    journalctl -u fitness-calendar -f
 ```
 
-<!-- TODO: Set up GitHub Actions to auto-deploy on push to main (npm build + rsync dist + rsync backend + restart service) -->
+<!-- TODO: Set up GitHub Actions to auto-deploy on push to main (SSH + deploy/server-deploy.sh main) -->
 
 ### Patterns
 - All date keys use `'yyyy-MM-dd'` format

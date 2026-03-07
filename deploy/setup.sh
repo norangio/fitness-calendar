@@ -1,9 +1,9 @@
-#!/bin/bash
-# Run on the Hetzner server as root to deploy fitness-calendar.
+#!/usr/bin/env bash
+# Run on the Hetzner server as root to bootstrap fitness-calendar.
 # Assumes the repo has been cloned to /opt/fitness-calendar/
-# and the frontend has been built locally (dist/ committed or rsync'd).
+# and Node.js 20+ plus npm are installed for frontend builds.
 
-set -e
+set -euo pipefail
 
 APP_DIR=/opt/fitness-calendar
 
@@ -11,7 +11,10 @@ APP_DIR=/opt/fitness-calendar
 mkdir -p $APP_DIR/data
 chown www-data:www-data $APP_DIR/data
 
-# 2. Create Python venv and install dependencies
+# 2. Build frontend and install backend dependencies
+npm --prefix "$APP_DIR" ci --no-audit --no-fund
+npm --prefix "$APP_DIR" run build
+
 python3 -m venv $APP_DIR/venv
 $APP_DIR/venv/bin/pip install -r $APP_DIR/backend/requirements.txt
 
