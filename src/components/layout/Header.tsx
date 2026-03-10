@@ -4,7 +4,7 @@ import { Button } from '../ui/Button.tsx';
 import { useAppStore } from '../../store/activityStore.ts';
 import { exportBackupJSON, importBackupJSON, type BackupData } from '../../lib/storage.ts';
 import { api } from '../../lib/api.ts';
-import { isGistSyncConfigured, syncToGist } from '../../lib/gistSync.ts';
+import { syncToGist } from '../../lib/gistSync.ts';
 
 interface HeaderProps {
   onDataCleared: () => void;
@@ -87,7 +87,7 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
           <Download size={14} />
           <span className="hidden sm:inline">Export</span>
         </Button>
-        {isGistSyncConfigured() && currentUser === 'nick' && (
+        {Boolean(currentUser) && (
           <Button variant="ghost" size="sm" onClick={handleSync} disabled={syncing}>
             <CloudUpload size={14} />
             <span className="hidden sm:inline">{syncing ? 'Syncing\u2026' : 'Sync'}</span>

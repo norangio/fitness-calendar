@@ -55,7 +55,7 @@ Click **Body Log** in the header to log pain or discomfort. Choose a body part (
 - **Multiple Calendar Views** — day, week, month, year, and heatmap
 - **Activity Charts** — area charts showing activity hours over time, visible on desktop
 - **Body Wellness Tracking** — log pain/discomfort with severity ratings and notes
-- **GitHub Gist Sync** *(nick only)* — pushes data to a private GitHub Gist for use by an email digest pipeline
+- **GitHub Gist Sync** — pushes data to a private GitHub Gist for use by an email digest pipeline
 - **JSON Backup & Restore** — export all data and restore it anytime
 - **Dark/Light Theme** — toggle in the top-right corner
 - **Multi-user** — each user's data is fully isolated on the server
@@ -173,7 +173,7 @@ DATABASE_URL=sqlite:////opt/fitness-calendar/data/fitness.db python3 migrate_add
 
 ## GitHub Gist Sync
 
-The app can push all data to a private GitHub Gist for use by external tools (e.g. an email digest pipeline). This feature is only available for the `nick` user.
+The app can push all data to a private GitHub Gist for use by external tools (e.g. an email digest pipeline).
 
 To set up:
 
@@ -184,7 +184,7 @@ To set up:
    VITE_GITHUB_TOKEN=ghp_your_token_here
    VITE_FITNESS_GIST_ID=your_gist_hex_id
    ```
-4. A **Sync** button appears in the header — click it to push your data
+4. The **Sync** button in the header triggers a push to the configured gist
 
 ---
 

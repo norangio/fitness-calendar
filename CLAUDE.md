@@ -100,7 +100,7 @@ src/
 - `src/lib/gistSync.ts` — exports `isGistSyncConfigured()` and `syncToGist()`
 - Fetches full export from `GET /api/export`, then PATCHes it to a private GitHub Gist as `fitness_data.json`
 - Env vars: `VITE_GITHUB_TOKEN` (PAT with gist scope), `VITE_FITNESS_GIST_ID` (hex gist ID)
-- Sync button in Header.tsx only visible when env vars are configured
+- Sync button in Header.tsx is visible for authenticated users; sync attempts return a clear error if env vars are missing
 - Full overwrite each sync — SQLite is source of truth, gist is read-only snapshot
 - Used by the email-reports pipeline to generate weekly fitness digest insights
 
