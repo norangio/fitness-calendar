@@ -186,6 +186,10 @@ To set up:
    ```
 4. The **Sync** button in the header triggers a push to the configured gist
 
+Notes:
+- Sync writes `activities` and `bodyLogs` from the backend export and keeps existing extra keys (for example `healthMetrics` written by the Garmin workflow).
+- Activities and body logs are written sorted by date (newest first) so recent workouts appear at the top of `fitness_data.json`.
+
 ---
 
 ## Project Structure
