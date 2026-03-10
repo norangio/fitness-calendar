@@ -189,6 +189,7 @@ To set up:
 Notes:
 - Sync writes `activities` and `bodyLogs` from the backend export and keeps existing extra keys (for example `healthMetrics` written by the Garmin workflow).
 - Activities and body logs are written sorted by date (newest first) so recent workouts appear at the top of `fitness_data.json`.
+- If the browser cannot read existing gist content (for example on very large/truncated files), sync still pushes `activities` and `bodyLogs` instead of failing.
 
 ---
 

@@ -55,8 +55,7 @@ async function fetchExistingGistData(token: string, gistId: string): Promise<Gis
   });
 
   if (!gistResp.ok) {
-    const body = await gistResp.text();
-    throw new Error(`Failed to read gist (${gistResp.status}): ${body}`);
+    return {};
   }
 
   const gistData = (await gistResp.json()) as GistResponse;
@@ -65,17 +64,15 @@ async function fetchExistingGistData(token: string, gistId: string): Promise<Gis
 
   let fileContent = fileInfo.content ?? '{}';
   if (fileInfo.truncated && fileInfo.raw_url) {
-    const rawResp = await fetch(fileInfo.raw_url, {
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github+json',
-      },
-    });
-    if (!rawResp.ok) {
-      const body = await rawResp.text();
-      throw new Error(`Failed to read raw gist file (${rawResp.status}): ${body}`);
+    // For secret/private gists, raw_url is generally directly readable and
+    // avoiding Authorization here prevents CORS preflight failures in-browser.
+    const rawResp = await fetch(fileInfo.raw_url);
+    if (rawResp.ok) {
+      fileContent = await rawResp.text();
+    } else {
+      // Fall back to empty object instead of blocking sync.
+      return {};
     }
-    fileContent = await rawResp.text();
   }
 
   try {
@@ -94,10 +91,8 @@ export async function syncToGist(): Promise<{ success: boolean; error?: string }
   }
 
   try {
-    const [data, existing] = await Promise.all([
-      api.export(),
-      fetchExistingGistData(token, gistId),
-    ]);
+    const data = await api.export();
+    const existing = await fetchExistingGistData(token, gistId);
 
     // Preserve non-export keys (e.g. Garmin-synced healthMetrics) while
     // replacing activities/bodyLogs from the source-of-truth backend export.

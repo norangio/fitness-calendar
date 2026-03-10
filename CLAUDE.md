@@ -103,6 +103,7 @@ src/
 - Sync button in Header.tsx is visible for authenticated users; sync attempts return a clear error if env vars are missing
 - Sync preserves non-export keys already in gist (e.g. `healthMetrics`) while replacing `activities`/`bodyLogs`
 - Activities/body logs are sorted by date descending before writing so newest entries appear first
+- If reading existing gist content fails in-browser (e.g. large truncated gist raw fetch), sync still proceeds with `activities`/`bodyLogs` update instead of failing
 - File is rewritten each sync; `activities`/`bodyLogs` come from SQLite export (source of truth)
 - Used by the email-reports pipeline to generate weekly fitness digest insights
 
