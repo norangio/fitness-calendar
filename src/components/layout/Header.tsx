@@ -1,10 +1,9 @@
 import { useRef, useState } from 'react';
-import { Moon, Sun, Upload, Download, FolderUp, Activity, Trash2, HeartPulse, CloudUpload, RefreshCw } from 'lucide-react';
+import { Moon, Sun, Upload, Download, FolderUp, Activity, Trash2, HeartPulse, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/Button.tsx';
 import { useAppStore } from '../../store/activityStore.ts';
 import { exportBackupJSON, importBackupJSON, type BackupData } from '../../lib/storage.ts';
 import { api } from '../../lib/api.ts';
-import { syncToGist } from '../../lib/gistSync.ts';
 
 interface HeaderProps {
   onDataCleared: () => void;
@@ -17,7 +16,6 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
   const setImportModalOpen = useAppStore((s) => s.setImportModalOpen);
   const setBodyTrackerOpen = useAppStore((s) => s.setBodyTrackerOpen);
   const restoreInputRef = useRef<HTMLInputElement>(null);
-  const [syncing, setSyncing] = useState(false);
   const [garminSyncing, setGarminSyncing] = useState(false);
 
   const handleClear = async () => {
@@ -72,19 +70,6 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
     }
   };
 
-  const handleSync = async () => {
-    setSyncing(true);
-    try {
-      const result = await syncToGist();
-      if (result.success) {
-        alert('Synced to GitHub Gist successfully.');
-      } else {
-        alert(`Sync failed: ${result.error}`);
-      }
-    } finally {
-      setSyncing(false);
-    }
-  };
 
   return (
     <header className="flex items-center justify-between border-b border-slate-200 bg-white/80 backdrop-blur px-3 sm:px-6 py-2 sm:py-3 dark:border-slate-700 dark:bg-slate-800/80">
@@ -107,12 +92,7 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
             <span className="hidden sm:inline">{garminSyncing ? 'Syncing\u2026' : 'Garmin'}</span>
           </Button>
         )}
-        {Boolean(currentUser) && (
-          <Button variant="ghost" size="sm" onClick={handleSync} disabled={syncing}>
-            <CloudUpload size={14} />
-            <span className="hidden sm:inline">{syncing ? 'Syncing\u2026' : 'Sync'}</span>
-          </Button>
-        )}
+
         <label>
           <input ref={restoreInputRef} type="file" accept=".json" className="hidden" onChange={handleRestore} />
           <Button variant="ghost" size="sm" onClick={() => restoreInputRef.current?.click()}>
