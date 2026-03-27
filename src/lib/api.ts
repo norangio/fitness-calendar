@@ -36,6 +36,9 @@ export const api = {
     bulkImport: (activities: Activity[]) =>
       request<{ added: number; skipped: number }>('POST', '/activities/bulk-import', { activities }),
 
+    syncGarmin: (days = 90) =>
+      request<{ added: number; skipped: number }>('POST', `/sync/garmin?days=${days}`),
+
     delete: (id: string) =>
       request<void>('DELETE', `/activities/${id}`),
 

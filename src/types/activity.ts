@@ -5,6 +5,10 @@ export type ActivityType =
   | 'weightlifting'
   | 'running'
   | 'cycling'
+  | 'hiking'
+  | 'walking'
+  | 'pool_swim'
+  | 'indoor_cardio'
   | 'other';
 
 export interface Activity {

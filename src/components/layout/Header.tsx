@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Moon, Sun, Upload, Download, FolderUp, Activity, Trash2, HeartPulse, CloudUpload } from 'lucide-react';
+import { Moon, Sun, Upload, Download, FolderUp, Activity, Trash2, HeartPulse, CloudUpload, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/Button.tsx';
 import { useAppStore } from '../../store/activityStore.ts';
 import { exportBackupJSON, importBackupJSON, type BackupData } from '../../lib/storage.ts';
@@ -18,6 +18,7 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
   const setBodyTrackerOpen = useAppStore((s) => s.setBodyTrackerOpen);
   const restoreInputRef = useRef<HTMLInputElement>(null);
   const [syncing, setSyncing] = useState(false);
+  const [garminSyncing, setGarminSyncing] = useState(false);
 
   const handleClear = async () => {
     if (!window.confirm('Delete all activities and body logs? This cannot be undone.')) return;
@@ -58,6 +59,19 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
     if (restoreInputRef.current) restoreInputRef.current.value = '';
   };
 
+  const handleGarminSync = async () => {
+    setGarminSyncing(true);
+    try {
+      const result = await api.activities.syncGarmin();
+      alert(`Garmin sync complete: ${result.added} added, ${result.skipped} skipped`);
+      onDataCleared();
+    } catch (e) {
+      alert(`Garmin sync failed: ${e instanceof Error ? e.message : e}`);
+    } finally {
+      setGarminSyncing(false);
+    }
+  };
+
   const handleSync = async () => {
     setSyncing(true);
     try {
@@ -87,6 +101,12 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
           <Download size={14} />
           <span className="hidden sm:inline">Export</span>
         </Button>
+        {Boolean(currentUser) && (
+          <Button variant="ghost" size="sm" onClick={handleGarminSync} disabled={garminSyncing}>
+            <RefreshCw size={14} className={garminSyncing ? 'animate-spin' : ''} />
+            <span className="hidden sm:inline">{garminSyncing ? 'Syncing\u2026' : 'Garmin'}</span>
+          </Button>
+        )}
         {Boolean(currentUser) && (
           <Button variant="ghost" size="sm" onClick={handleSync} disabled={syncing}>
             <CloudUpload size={14} />

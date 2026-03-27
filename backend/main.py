@@ -285,6 +285,98 @@ def import_backup(data: BackupData, db: Session = Depends(get_db), user: str = D
     return {"activities": len(data.activities), "bodyLogs": len(data.bodyLogs)}
 
 
+# ── Garmin sync ───────────────────────────────────────────────────────────────
+
+GARMIN_SPORT_MAP: dict[str, str] = {
+    'strength_training': 'weightlifting',
+    'yoga': 'yoga',
+    'open_water_swimming': 'open_water_swimming',
+    'walking': 'walking',
+    'basketball': 'basketball',
+    'running': 'running',
+    'indoor_cardio': 'indoor_cardio',
+    'treadmill_running': 'indoor_cardio',
+    'indoor_running': 'indoor_cardio',
+    'hiking': 'hiking',
+    'cycling': 'cycling',
+    'indoor_cycling': 'indoor_cardio',
+    'lap_swimming': 'pool_swim',
+}
+
+
+@app.post("/api/sync/garmin")
+def sync_from_garmin(
+    days: int = Query(default=90),
+    db: Session = Depends(get_db),
+    user: str = Depends(get_current_user),
+) -> BulkImportResult:
+    import urllib.request
+    from datetime import date, timedelta
+
+    garmin_url = os.environ.get("GARMIN_BOT_API_URL", "http://localhost:8091")
+    api_key = os.environ.get("GARMIN_BOT_API_KEY", "")
+    if not api_key:
+        raise HTTPException(status_code=503, detail="Garmin sync not configured (missing GARMIN_BOT_API_KEY)")
+
+    to_date = date.today().isoformat()
+    from_date = (date.today() - timedelta(days=days)).isoformat()
+
+    url = f"{garmin_url}/api/activities?from={from_date}&to={to_date}"
+    req = urllib.request.Request(url, headers={"X-API-Key": api_key})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            garmin_activities = json.loads(resp.read())
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Garmin API error: {e}")
+
+    activities_to_import: list[ActivityIn] = []
+    for g in garmin_activities:
+        if str(g.get("id", "")).startswith("cal-"):
+            continue
+        fc_type = GARMIN_SPORT_MAP.get(g.get("sport", ""), "other")
+        raw_title = g.get("title") or ""
+        title = raw_title if raw_title else fc_type.replace("_", " ").title()
+        activities_to_import.append(ActivityIn(
+            id=f"garmin-{g['id']}",
+            type=fc_type,
+            title=title,
+            date=g["date"],
+            durationMinutes=round(float(g.get("duration_mins") or 0), 1),
+            distanceKm=g.get("distance_km"),
+            calories=g.get("calories"),
+            avgHeartRate=g.get("avg_hr"),
+            maxHeartRate=g.get("max_hr"),
+            source="garmin",
+        ))
+
+    if not activities_to_import:
+        return BulkImportResult(added=0, skipped=0)
+
+    dates = list({a.date for a in activities_to_import})
+    existing = (
+        db.query(Activity)
+        .filter(and_(Activity.user_id == user, Activity.date >= min(dates), Activity.date <= max(dates)))
+        .all()
+    )
+    existing_fps = {_activity_fingerprint(e.to_dict()) for e in existing}
+
+    added = 0
+    skipped = 0
+    for a in activities_to_import:
+        fp = _activity_fingerprint(a.model_dump())
+        if fp in existing_fps:
+            skipped += 1
+        else:
+            orm = _activity_to_orm(a)
+            orm.user_id = user
+            db.add(orm)
+            existing_fps.add(fp)
+            added += 1
+
+    db.commit()
+    return BulkImportResult(added=added, skipped=skipped)
+
+
 # ── Serve frontend static files (production) ──────────────────────────────────
 # Must be mounted LAST so API routes take priority.
 

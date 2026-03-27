@@ -1,6 +1,6 @@
 # Fitness Calendar
 
-A React + TypeScript fitness activity calendar with Garmin import support, activity visualization, and body wellness tracking. Hosted on a Hetzner VPS with FastAPI + SQLite backend, served via Caddy.
+A React + TypeScript fitness activity calendar with Garmin live sync + CSV import support, activity visualization, and body wellness tracking. Hosted on a Hetzner VPS with FastAPI + SQLite backend, served via Caddy.
 
 ## Tech Stack
 - **React 19** + **TypeScript** + **Vite 7**
@@ -81,9 +81,11 @@ src/
 - API routes:
   - `GET/POST/DELETE /api/activities`
   - `POST /api/activities/bulk-import` (dedup by date|type|duration|startTime fingerprint)
+  - `POST /api/sync/garmin?days=N` — pull last N days (default 90) from garmin-bot API, dedup + import
   - `GET/POST/DELETE /api/body-logs`
   - `GET /api/export` — full JSON backup
   - `POST /api/import` — restore from backup
+- Garmin sync env vars (in `.env` on VPS): `GARMIN_BOT_API_URL=http://localhost:8091`, `GARMIN_BOT_API_KEY`
 
 ### Body Tracker
 - Categories: `'back' | 'knee' | 'ankle' | (string & {})` (PainCategory type — extensible with custom entries)
