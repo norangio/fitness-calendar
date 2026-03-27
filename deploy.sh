@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Deploy fitness-calendar to production using GitHub as the source of truth.
+# Deploy fitness-calendar to production.
+# Builds frontend locally, uploads dist/ to VPS, then runs backend deploy.
 # Usage: ./deploy.sh [branch]
 set -euo pipefail
 
@@ -21,7 +22,14 @@ if [[ "${SKIP_PUSH:-0}" != "1" ]]; then
   git push origin "$BRANCH"
 fi
 
-echo "→ Pulling latest code on VPS and deploying..."
+echo "→ Building frontend..."
+npm ci --no-audit --no-fund --silent
+npm run build
+
+echo "→ Uploading dist/ to VPS..."
+rsync -az --delete dist/ "$SERVER:$REMOTE/dist/"
+
+echo "→ Running backend deploy on VPS..."
 ssh "$SERVER" "
 set -euo pipefail
 if [ ! -d \"$REMOTE/.git\" ]; then
@@ -36,7 +44,7 @@ else
 fi
 git config --global --add safe.directory \"$REMOTE\"
 git -C \"$REMOTE\" fetch origin \"$BRANCH\"
-git -C \"$REMOTE\" clean -fd -e data/ -e .env
+git -C \"$REMOTE\" clean -fd -e data/ -e .env -e dist/
 if git -C \"$REMOTE\" show-ref --verify --quiet \"refs/heads/$BRANCH\"; then
   git -C \"$REMOTE\" checkout \"$BRANCH\"
 else
