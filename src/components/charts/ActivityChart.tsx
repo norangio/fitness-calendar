@@ -1,4 +1,4 @@
-import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Bar, BarChart } from 'recharts';
 import type { Activity } from '../../types/activity.ts';
 import type { ViewMode } from '../../types/calendar.ts';
 import { useChartData } from '../../hooks/useChartData.ts';
@@ -20,7 +20,6 @@ export function ActivityChart({ activities, viewMode, dateRange }: ActivityChart
   const tooltipBg = isDark ? '#1e293b' : '#ffffff';
   const tooltipBorder = isDark ? '#334155' : '#e2e8f0';
   const tooltipLabel = isDark ? '#94a3b8' : '#64748b';
-  const labelColor = isDark ? '#64748b' : '#94a3b8';
 
   if (series.length === 0) {
     return (
@@ -33,16 +32,8 @@ export function ActivityChart({ activities, viewMode, dateRange }: ActivityChart
   return (
     <div className="h-56">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
-          <defs>
-            {series.map((s) => (
-              <linearGradient key={s.type} id={`gradient-${s.type}`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={s.color} stopOpacity={0.3} />
-                <stop offset="95%" stopColor={s.color} stopOpacity={0} />
-              </linearGradient>
-            ))}
-          </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+        <BarChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
+          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
           <XAxis
             dataKey="label"
             tick={{ fontSize: 10, fill: tickColor }}
@@ -53,7 +44,6 @@ export function ActivityChart({ activities, viewMode, dateRange }: ActivityChart
             tick={{ fontSize: 10, fill: tickColor }}
             axisLine={false}
             tickLine={false}
-            label={{ value: 'hours', angle: -90, position: 'insideLeft', style: { fontSize: 10, fill: labelColor } }}
           />
           <Tooltip
             contentStyle={{
@@ -63,21 +53,20 @@ export function ActivityChart({ activities, viewMode, dateRange }: ActivityChart
               fontSize: '12px',
             }}
             labelStyle={{ color: tooltipLabel }}
+            formatter={((value?: number, name?: string) => [`${value ?? 0}h`, name ?? '']) as never}
+            cursor={{ fill: isDark ? 'rgba(148,163,184,0.08)' : 'rgba(0,0,0,0.04)' }}
           />
           {series.map((s) => (
-            <Area
+            <Bar
               key={s.type}
-              type="monotone"
               dataKey={s.type}
               name={s.label}
-              stroke={s.color}
-              fill={`url(#gradient-${s.type})`}
-              strokeWidth={2}
-              dot={{ r: 3, fill: s.color }}
-              activeDot={{ r: 5, fill: s.color }}
+              stackId="activities"
+              fill={s.color}
+              radius={0}
             />
           ))}
-        </AreaChart>
+        </BarChart>
       </ResponsiveContainer>
 
       {/* Legend */}

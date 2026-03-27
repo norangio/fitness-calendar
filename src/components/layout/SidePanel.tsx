@@ -1,9 +1,14 @@
+import { useMemo } from 'react';
 import type { Activity } from '../../types/activity.ts';
 import type { ViewMode } from '../../types/calendar.ts';
 import type { BodyLogEntry } from '../../types/bodyLog.ts';
 import { ActivityChart } from '../charts/ActivityChart.tsx';
-import { BodyLogChart } from '../charts/BodyLogChart.tsx';
 import { ACTIVITY_TYPES } from '../../constants/activityTypes.ts';
+
+const SEVERITY_COLORS = ['', '#22c55e', '#84cc16', '#eab308', '#f97316', '#ef4444'];
+const SEVERITY_LABELS: Record<number, string> = {
+  1: 'Mild', 2: 'Slight', 3: 'Moderate', 4: 'Bad', 5: 'Severe',
+};
 
 interface SidePanelProps {
   activities: Activity[];
@@ -16,6 +21,25 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
   const totalMinutes = activities.reduce((sum, a) => sum + a.durationMinutes, 0);
   const totalHours = Math.round(totalMinutes / 6) / 10;
   const uniqueTypes = [...new Set(activities.map((a) => a.type))];
+
+  const painSummary = useMemo(() => {
+    if (bodyLogs.length === 0) return null;
+    const byCat: Record<string, { count: number; avgSeverity: number; maxSeverity: number }> = {};
+    for (const log of bodyLogs) {
+      if (!byCat[log.category]) {
+        byCat[log.category] = { count: 0, avgSeverity: 0, maxSeverity: 0 };
+      }
+      byCat[log.category].count++;
+      byCat[log.category].avgSeverity += log.severity;
+      byCat[log.category].maxSeverity = Math.max(byCat[log.category].maxSeverity, log.severity);
+    }
+    return Object.entries(byCat).map(([cat, stats]) => ({
+      category: cat.charAt(0).toUpperCase() + cat.slice(1),
+      count: stats.count,
+      avg: Math.round(stats.avgSeverity / stats.count * 10) / 10,
+      max: stats.maxSeverity,
+    }));
+  }, [bodyLogs]);
 
   return (
     <aside className="flex flex-col gap-4 border-l border-slate-200 bg-slate-50/80 p-5 overflow-y-auto w-80 shrink-0 dark:border-slate-700 dark:bg-slate-800/50">
@@ -31,6 +55,29 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
             <div className="text-xs text-slate-500 dark:text-slate-400">Total Time</div>
           </div>
         </div>
+
+        {painSummary && (
+          <div className="mt-3 flex flex-wrap gap-2">
+            {painSummary.map((p) => (
+              <span
+                key={p.category}
+                className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+                style={{
+                  backgroundColor: SEVERITY_COLORS[Math.round(p.avg)] + '1a',
+                  color: SEVERITY_COLORS[Math.round(p.avg)],
+                  border: `1px solid ${SEVERITY_COLORS[Math.round(p.avg)]}33`,
+                }}
+                title={`${p.count} entries, avg ${p.avg}/5 (${SEVERITY_LABELS[Math.round(p.avg)]}), peak ${p.max}/5`}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full"
+                  style={{ backgroundColor: SEVERITY_COLORS[Math.round(p.avg)] }}
+                />
+                {p.category} · avg {p.avg}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div>
@@ -56,11 +103,6 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
       <div>
         <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3 dark:text-slate-400">Activity Hours</h2>
         <ActivityChart activities={activities} viewMode={viewMode} dateRange={dateRange} />
-      </div>
-
-      <div className="mt-4">
-        <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3 dark:text-slate-400">Pain Severity</h2>
-        <BodyLogChart bodyLogs={bodyLogs} viewMode={viewMode} dateRange={dateRange} />
       </div>
     </aside>
   );
