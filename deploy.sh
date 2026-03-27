@@ -44,7 +44,7 @@ else
 fi
 git config --global --add safe.directory \"$REMOTE\"
 git -C \"$REMOTE\" fetch origin \"$BRANCH\"
-git -C \"$REMOTE\" clean -fd -e data/ -e .env -e dist/
+git -C \"$REMOTE\" clean -fd -e data/ -e .env -e dist/ -e venv/
 if git -C \"$REMOTE\" show-ref --verify --quiet \"refs/heads/$BRANCH\"; then
   git -C \"$REMOTE\" checkout \"$BRANCH\"
 else

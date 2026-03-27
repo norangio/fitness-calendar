@@ -69,7 +69,7 @@ jobs:
           fi
           git config --global --add safe.directory "$APP_DIR"
           git -C "$APP_DIR" fetch origin "$DEPLOY_BRANCH"
-          git -C "$APP_DIR" clean -fd -e data/ -e .env -e dist/
+          git -C "$APP_DIR" clean -fd -e data/ -e .env -e dist/ -e venv/
           if git -C "$APP_DIR" show-ref --verify --quiet "refs/heads/$DEPLOY_BRANCH"; then
             git -C "$APP_DIR" checkout "$DEPLOY_BRANCH"
           else
