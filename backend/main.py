@@ -78,7 +78,8 @@ class BackupData(BaseModel):
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _activity_fingerprint(a: dict) -> str:
-    return f"{a['date']}|{a['type']}|{a['durationMinutes']}|{a.get('startTime') or ''}"
+    duration = round(float(a['durationMinutes']))
+    return f"{a['date']}|{a['type']}|{duration}|{a.get('startTime') or ''}"
 
 
 def _activity_to_orm(a: ActivityIn) -> Activity:
