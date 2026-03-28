@@ -6,7 +6,7 @@ import {
   isToday,
 } from '../../lib/dateUtils.ts';
 import type { Activity } from '../../types/activity.ts';
-import { ActivityBlock } from './ActivityBlock.tsx';
+import { ACTIVITY_TYPES } from '../../constants/activityTypes.ts';
 
 interface WeekViewProps {
   anchorDate: Date;
@@ -14,8 +14,6 @@ interface WeekViewProps {
   onDayClick: (date: Date) => void;
   onActivityClick: (activity: Activity) => void;
 }
-
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }: WeekViewProps) {
   const weekStart = startOfWeek(anchorDate);
@@ -32,14 +30,13 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Day headers */}
-      <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] border-b border-slate-200 dark:border-slate-700">
-        <div />
+      <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-700">
         {days.map((day) => {
           const today = isToday(day);
           return (
             <div
               key={day.toISOString()}
-              className="px-2 py-2 text-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/30"
+              className="px-1 py-2 text-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/30"
               onClick={() => onDayClick(day)}
             >
               <div className="text-xs text-slate-500 dark:text-slate-400">{format(day, 'EEE')}</div>
@@ -53,46 +50,42 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
         })}
       </div>
 
-      {/* Time grid */}
-      <div className="flex-1 overflow-y-auto overflow-x-auto">
-        <div className="grid grid-cols-[40px_repeat(7,1fr)] sm:grid-cols-[60px_repeat(7,1fr)] relative min-w-[500px]">
-          {HOURS.map((hour) => (
-            <div key={hour} className="contents">
-              <div className="h-14 border-b border-slate-200 pr-2 text-right text-[10px] text-slate-400 pt-0.5 dark:border-slate-700/30 dark:text-slate-500">
-                {hour === 0 ? '' : `${hour}:00`}
-              </div>
-              {days.map((day) => (
-                <div key={`${hour}-${day.toISOString()}`} className="h-14 border-b border-l border-slate-200 dark:border-slate-700/30" />
-              ))}
-            </div>
-          ))}
-
-          {/* Activities overlaid */}
-          {days.map((day, dayIdx) => {
+      {/* Activity columns */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="grid grid-cols-7 divide-x divide-slate-200 dark:divide-slate-700/50 h-full min-h-full">
+          {days.map((day) => {
             const key = format(day, 'yyyy-MM-dd');
             const dayActivities = activityMap.get(key) ?? [];
-            return dayActivities.map((activity) => {
-              const startHour = activity.startTime
-                ? parseInt(activity.startTime.split(':')[0], 10)
-                : 8;
-              const top = startHour * 56; // 56px = h-14
-              const height = Math.max((activity.durationMinutes / 60) * 56, 24);
+            const today = isToday(day);
 
-              return (
-                <div
-                  key={activity.id}
-                  className="absolute"
-                  style={{
-                    top: `${top}px`,
-                    height: `${height}px`,
-                    left: `calc(60px + ${dayIdx} * ((100% - 60px) / 7) + 2px)`,
-                    width: `calc((100% - 60px) / 7 - 4px)`,
-                  }}
-                >
-                  <ActivityBlock activity={activity} onClick={onActivityClick} />
-                </div>
-              );
-            });
+            return (
+              <div
+                key={key}
+                className={`p-1 space-y-1 ${today ? 'bg-slate-50 dark:bg-slate-700/10' : ''}`}
+              >
+                {dayActivities.map((activity) => {
+                  const config = ACTIVITY_TYPES[activity.type];
+                  return (
+                    <div
+                      key={activity.id}
+                      className="rounded px-1.5 py-1 cursor-pointer hover:brightness-110 transition-all"
+                      style={{
+                        backgroundColor: config.color + '20',
+                        borderLeft: `3px solid ${config.color}`,
+                      }}
+                      onClick={() => onActivityClick(activity)}
+                    >
+                      <div className="text-xs font-medium text-slate-800 dark:text-slate-200 truncate leading-tight">
+                        {activity.title}
+                      </div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+                        {Math.round(activity.durationMinutes)}m
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
           })}
         </div>
       </div>

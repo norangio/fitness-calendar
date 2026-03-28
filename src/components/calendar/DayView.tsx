@@ -10,8 +10,6 @@ interface DayViewProps {
   onActivityClick: (activity: Activity) => void;
 }
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-
 const SEVERITY_LABELS: Record<number, string> = {
   1: 'Mild', 2: 'Slight', 3: 'Moderate', 4: 'Bad', 5: 'Severe',
 };
@@ -69,41 +67,29 @@ export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick
             No activities on this day
           </div>
         ) : (
-          <div className="grid grid-cols-[60px_1fr] relative">
-            {HOURS.map((hour) => (
-              <div key={hour} className="contents">
-                <div className="h-14 border-b border-slate-200 pr-2 text-right text-[10px] text-slate-400 pt-0.5 dark:border-slate-700/30 dark:text-slate-500">
-                  {hour === 0 ? '' : `${hour}:00`}
-                </div>
-                <div className="h-14 border-b border-slate-200 dark:border-slate-700/30" />
-              </div>
-            ))}
-
+          <div className="p-4 space-y-3">
             {dayActivities.map((activity) => {
-              const startHour = activity.startTime
-                ? parseInt(activity.startTime.split(':')[0], 10)
-                : 8;
-              const top = startHour * 56;
-              const height = Math.max((activity.durationMinutes / 60) * 56, 32);
               const config = ACTIVITY_TYPES[activity.type];
-
               return (
                 <div
                   key={activity.id}
-                  className="absolute left-[64px] right-4 rounded-lg p-3 cursor-pointer hover:brightness-110 transition-all"
+                  className="rounded-lg p-4 cursor-pointer hover:brightness-110 transition-all"
                   style={{
-                    top: `${top}px`,
-                    height: `${height}px`,
-                    backgroundColor: config.color + '20',
+                    backgroundColor: config.color + '18',
                     borderLeft: `4px solid ${config.color}`,
                   }}
                   onClick={() => onActivityClick(activity)}
                 >
-                  <div className="text-sm font-medium text-slate-800 dark:text-slate-200">{activity.title}</div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    {Math.round(activity.durationMinutes)} min
-                    {activity.calories ? ` · ${activity.calories} cal` : ''}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{activity.title}</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">{Math.round(activity.durationMinutes)} min</span>
                   </div>
+                  {(activity.calories || activity.avgHeartRate) && (
+                    <div className="mt-1 flex gap-3 text-xs text-slate-500 dark:text-slate-400">
+                      {activity.calories && <span>{activity.calories} cal</span>}
+                      {activity.avgHeartRate && <span>{activity.avgHeartRate} bpm avg</span>}
+                    </div>
+                  )}
                 </div>
               );
             })}

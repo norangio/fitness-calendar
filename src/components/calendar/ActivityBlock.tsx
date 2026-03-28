@@ -23,12 +23,12 @@ export function ActivityBlock({ activity, compact = false, onClick }: ActivityBl
 
   return (
     <div
-      className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs cursor-pointer hover:brightness-110 transition-all truncate"
-      style={{ backgroundColor: config.color + '20', borderLeft: `3px solid ${config.color}` }}
+      className="flex items-center gap-1 rounded px-1 sm:px-1.5 py-0.5 text-[10px] sm:text-xs cursor-pointer hover:brightness-110 transition-all truncate"
+      style={{ backgroundColor: config.color + '20', borderLeft: `2px solid ${config.color}` }}
       onClick={() => onClick?.(activity)}
     >
-      <span className="font-medium text-slate-800 truncate dark:text-slate-200">{activity.title}</span>
-      <span className="text-slate-500 shrink-0 dark:text-slate-400">{Math.round(activity.durationMinutes)}m</span>
+      <span className="font-medium text-slate-800 truncate dark:text-slate-200 leading-tight">{activity.title}</span>
+      <span className="text-slate-500 shrink-0 dark:text-slate-400 hidden sm:inline">{Math.round(activity.durationMinutes)}m</span>
     </div>
   );
 }
