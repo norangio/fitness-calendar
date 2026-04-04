@@ -359,12 +359,23 @@ def sync_from_garmin(
         .filter(and_(Activity.user_id == user, Activity.date >= min(dates), Activity.date <= max(dates)))
         .all()
     )
-    existing_fps = {_activity_fingerprint(e.to_dict()) for e in existing}
+    # Garmin imports never have startTime, so use date|type|rounded_duration only.
+    # The default fingerprint includes startTime, which causes false non-matches
+    # between old UUID-based garmin records (which have startTime) and new garmin-{id}
+    # records (which don't), leading to duplicates.
+    def _garmin_fp(d: dict) -> str:
+        return f"{d['date']}|{d['type']}|{round(float(d.get('durationMinutes') or 0))}"
+
+    existing_ids = {e.id for e in existing}
+    existing_fps = {_garmin_fp(e.to_dict()) for e in existing}
 
     added = 0
     skipped = 0
     for a in activities_to_import:
-        fp = _activity_fingerprint(a.model_dump())
+        if a.id in existing_ids:
+            skipped += 1
+            continue
+        fp = _garmin_fp(a.model_dump())
         if fp in existing_fps:
             skipped += 1
         else:
@@ -372,6 +383,7 @@ def sync_from_garmin(
             orm.user_id = user
             db.add(orm)
             existing_fps.add(fp)
+            existing_ids.add(a.id)
             added += 1
 
     db.commit()
