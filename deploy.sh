@@ -7,10 +7,21 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-SERVER="${SERVER:-root@5.78.109.38}"
+# Load local deploy config if present (gitignored — holds SERVER + REMOTE).
+if [[ -f "$SCRIPT_DIR/.deploy-env" ]]; then
+  # shellcheck disable=SC1090,SC1091
+  source "$SCRIPT_DIR/.deploy-env"
+fi
+
+SERVER="${SERVER:-}"
 REMOTE="${REMOTE:-/opt/fitness-calendar}"
 BRANCH="${1:-$(git rev-parse --abbrev-ref HEAD)}"
 REPO_URL="${REPO_URL:-$(git config --get remote.origin.url)}"
+
+if [[ -z "$SERVER" ]]; then
+  echo "Error: SERVER is not set. Create .deploy-env with SERVER=user@host or export SERVER." >&2
+  exit 1
+fi
 
 if [[ ! "$BRANCH" =~ ^[A-Za-z0-9._/-]+$ ]]; then
   echo "Invalid branch name: $BRANCH" >&2
@@ -54,4 +65,4 @@ git -C \"$REMOTE\" reset --hard \"origin/$BRANCH\"
 bash \"$REMOTE/deploy/server-deploy.sh\" \"$BRANCH\"
 "
 
-echo "✓ Deployed to https://fitness.norangio.dev"
+echo "✓ Deploy complete"

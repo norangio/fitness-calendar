@@ -96,6 +96,13 @@ The Vite dev proxy injects `X-Remote-User: nick` so the backend identifies you w
 
 Run `./deploy.sh` from the project root. Deploys use GitHub as the source of truth (no rsync from local machine).
 
+> Before first use, create a local `.deploy-env` (gitignored) at the repo root:
+> ```
+> SERVER=user@your-vps-host
+> REMOTE=/opt/fitness-calendar
+> ```
+> `deploy.sh` will source it at startup. GitHub Actions auto-deploy uses repo secrets instead and does not need this file.
+
 ```bash
 # Push current branch to GitHub, then deploy that branch on VPS
 ./deploy.sh
@@ -128,24 +135,23 @@ The server script:
 It bootstraps/syncs `/opt/fitness-calendar` from GitHub before running the server deploy script.
 
 Required repository secrets:
-- `VPS_HOST` (example: `5.78.109.38`)
-- `VPS_USER` (example: `root`)
-- `VPS_SSH_KEY` (private key content used by Actions)
+- `VPS_HOST` — your VPS IP or hostname
+- `VPS_USER` — SSH user (e.g. `root`)
+- `VPS_SSH_KEY` — private key content used by Actions
 
 One-time key setup:
 ```bash
 # local machine
 ssh-keygen -t ed25519 -f ~/.ssh/github-actions-hetzner -C "github-actions-deploy"
 
-# server
-cat ~/.ssh/github-actions-hetzner.pub | ssh root@5.78.109.38 'cat >> /root/.ssh/authorized_keys'
+# server (replace <VPS_USER>@<VPS_HOST> with your values)
+cat ~/.ssh/github-actions-hetzner.pub | ssh <VPS_USER>@<VPS_HOST> 'cat >> ~/.ssh/authorized_keys'
 ```
 Then paste `~/.ssh/github-actions-hetzner` (private key) into the `VPS_SSH_KEY` secret.
 
 If Node.js/npm are missing on the VPS, `deploy/server-deploy.sh` now installs Node.js 20 automatically before building.
 
 ```
-Server:  root@5.78.109.38
 App dir: /opt/fitness-calendar/
 Service: systemctl status fitness-calendar
 Logs:    journalctl -u fitness-calendar -f

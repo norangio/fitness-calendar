@@ -117,8 +117,15 @@ App dir: /opt/fitness-calendar/
 Service: systemctl status fitness-calendar
 Logs:    journalctl -u fitness-calendar -f
 ```
-- GitHub Actions auto-deploy: `.github/workflows/deploy.yml` on push to `main`
-- Required GitHub secrets: `VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`
+
+**Local deploy config (`.deploy-env`, gitignored)** — holds `SERVER` and `REMOTE` so the committed `deploy.sh` stays infra-agnostic in this public repo. Required format:
+```
+SERVER=user@your-vps-host
+REMOTE=/opt/fitness-calendar
+```
+`deploy.sh` sources it at startup and errors out if `SERVER` is unset. Never commit this file or paste its contents into tracked files (README, CLAUDE.md, etc.).
+
+- GitHub Actions auto-deploy: `.github/workflows/deploy.yml` on push to `main` — uses `secrets.VPS_HOST`/`VPS_USER`/`VPS_SSH_KEY` and does NOT read `.deploy-env`
 - The workflow bootstraps/syncs `/opt/fitness-calendar` from GitHub before deployment
 - `deploy/server-deploy.sh` auto-installs Node.js 20/npm if missing on VPS
 - Bootstrap sync preserves `data/` and `.env`, while cleaning stale app files

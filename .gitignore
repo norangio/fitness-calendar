@@ -13,6 +13,9 @@ dist-ssr
 *.local
 .env
 
+# Local deploy config (contains server host/credentials)
+.deploy-env
+
 # Python
 __pycache__/
 *.pyc
