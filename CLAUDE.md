@@ -63,6 +63,11 @@ src/
     └── ui/          # Button (shared component)
 ```
 
+### README Screenshots
+- README screenshots live in `docs/screenshots/`
+- Use stable lowercase filenames such as `heatmap-view.png` and `year-view.png`
+- Do not commit screenshots that expose usernames, private domains, body notes, exact health details, secrets, or backup/Gist identifiers
+
 ### View Modes
 `ViewMode = 'day' | 'week' | 'month' | 'year' | 'heatmap'`
 

@@ -5,11 +5,11 @@
 #   caddy hash-password --plaintext "theirpassword"
 #   Add the username + hash to the basicauth block below.
 
-fitness.norangio.dev {
+your-domain.example {
     basicauth {
         # Generate hash with: caddy hash-password --plaintext "yourpassword"
-        nick $2a$14$REPLACE_WITH_REAL_HASH
-        dad  $2a$14$REPLACE_WITH_REAL_HASH
+        user_one $2a$14$REPLACE_WITH_REAL_HASH
+        user_two $2a$14$REPLACE_WITH_REAL_HASH
     }
 
     # Proxy API requests to the FastAPI backend

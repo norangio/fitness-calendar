@@ -7,7 +7,7 @@ class Activity(Base):
     __tablename__ = "activities"
 
     id = Column(String, primary_key=True)
-    user_id = Column(String, nullable=False, index=True, default="nick")
+    user_id = Column(String, nullable=False, index=True, default="local-user")
     type = Column(String, nullable=False)
     title = Column(String, nullable=False)
     date = Column(String, nullable=False, index=True)
@@ -43,7 +43,7 @@ class BodyLog(Base):
     __tablename__ = "body_logs"
 
     id = Column(String, primary_key=True)
-    user_id = Column(String, nullable=False, index=True, default="nick")
+    user_id = Column(String, nullable=False, index=True, default="local-user")
     date = Column(String, nullable=False, index=True)
     category = Column(String, nullable=False)
     severity = Column(Integer, nullable=False)

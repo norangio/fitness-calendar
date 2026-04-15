@@ -19,7 +19,7 @@ app = FastAPI(title="Fitness Calendar API", docs_url=None, redoc_url=None)
 # ── Auth ─────────────────────────────────────────────────────────────────────
 
 DEV_MODE = os.environ.get("DEV_MODE", "false").lower() == "true"
-DEV_USER = os.environ.get("DEV_USER", "nick")
+DEV_USER = os.environ.get("DEV_USER", "local-user")
 
 
 def get_current_user(request: Request) -> str:

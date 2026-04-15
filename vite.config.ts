@@ -10,7 +10,7 @@ export default defineConfig({
         target: 'http://localhost:8001',
         changeOrigin: true,
         headers: {
-          'X-Remote-User': 'nick',
+          'X-Remote-User': 'local-user',
         },
       },
     },
