@@ -42,17 +42,17 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
   }, [bodyLogs]);
 
   return (
-    <aside className="flex flex-col gap-4 border-l border-slate-200 bg-slate-50/80 p-5 overflow-y-auto w-80 shrink-0 dark:border-slate-700 dark:bg-slate-800/50">
+    <aside className="flex flex-col gap-4 border-l border-stone-200 bg-stone-50/80 p-5 overflow-y-auto w-80 shrink-0 dark:border-stone-700 dark:bg-stone-800/50">
       <div>
-        <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider dark:text-slate-400">Summary</h2>
+        <h2 className="text-sm font-medium text-stone-500 uppercase tracking-wider dark:text-stone-400">Summary</h2>
         <div className="mt-3 grid grid-cols-2 gap-3">
-          <div className="rounded-lg bg-slate-200/60 p-3 dark:bg-slate-700/50">
-            <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">{activities.length}</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Activities</div>
+          <div className="rounded-lg bg-stone-200/60 p-3 dark:bg-stone-700/50">
+            <div className="text-2xl font-bold text-stone-900 dark:text-stone-100">{activities.length}</div>
+            <div className="text-xs text-stone-500 dark:text-stone-400">Activities</div>
           </div>
-          <div className="rounded-lg bg-slate-200/60 p-3 dark:bg-slate-700/50">
-            <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">{totalHours}h</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Total Time</div>
+          <div className="rounded-lg bg-stone-200/60 p-3 dark:bg-stone-700/50">
+            <div className="text-2xl font-bold text-stone-900 dark:text-stone-100">{totalHours}h</div>
+            <div className="text-xs text-stone-500 dark:text-stone-400">Total Time</div>
           </div>
         </div>
 
@@ -81,7 +81,7 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
       </div>
 
       <div>
-        <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3 dark:text-slate-400">By Type</h2>
+        <h2 className="text-sm font-medium text-stone-500 uppercase tracking-wider mb-3 dark:text-stone-400">By Type</h2>
         <div className="space-y-2">
           {uniqueTypes.map((type) => {
             const config = ACTIVITY_TYPES[type];
@@ -91,9 +91,9 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
               <div key={type} className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: config.color }} />
-                  <span className="text-slate-700 dark:text-slate-300">{config.label}</span>
+                  <span className="text-stone-700 dark:text-stone-300">{config.label}</span>
                 </div>
-                <span className="text-slate-500 dark:text-slate-400">{count} · {Math.round(mins / 6) / 10}h</span>
+                <span className="text-stone-500 dark:text-stone-400">{count} · {Math.round(mins / 6) / 10}h</span>
               </div>
             );
           })}
@@ -101,7 +101,7 @@ export function SidePanel({ activities, bodyLogs = [], viewMode, dateRange }: Si
       </div>
 
       <div>
-        <h2 className="text-sm font-medium text-slate-500 uppercase tracking-wider mb-3 dark:text-slate-400">Activity Hours</h2>
+        <h2 className="text-sm font-medium text-stone-500 uppercase tracking-wider mb-3 dark:text-stone-400">Activity Hours</h2>
         <ActivityChart activities={activities} viewMode={viewMode} dateRange={dateRange} />
       </div>
     </aside>

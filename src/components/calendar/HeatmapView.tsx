@@ -12,10 +12,10 @@ interface HeatmapViewProps {
 const DAY_LABELS = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
 const INTENSITY_COLORS = [
-  '#7c2d12', // orange-900
-  '#c2410c', // orange-700
-  '#f97316', // orange-500
-  '#fb923c', // orange-400
+  '#292524', // stone-800
+  '#44403c', // stone-700
+  '#78716c', // stone-500
+  '#a8a29e', // stone-400
 ];
 
 function getIntensityColor(minutes: number, emptyColor: string): string {
@@ -39,9 +39,9 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
   const theme = useAppStore((s) => s.theme);
 
   const isDark = theme === 'dark';
-  const emptyColor = isDark ? '#334155' : '#e2e8f0'; // slate-700 / slate-200
-  const labelColor = isDark ? '#94a3b8' : '#64748b';  // slate-400 / slate-500
-  const subLabelColor = isDark ? '#64748b' : '#94a3b8';
+  const emptyColor = isDark ? '#44403c' : '#e7e5e4'; // stone-700 / stone-200
+  const labelColor = isDark ? '#a8a29e' : '#78716c';  // stone-400 / stone-500
+  const subLabelColor = isDark ? '#78716c' : '#a8a29e';
 
   // Filter out "other" category, then build minute/count maps
   const filteredActivities = useMemo(
@@ -217,7 +217,7 @@ export function HeatmapView({ anchorDate, activities, onDayClick }: HeatmapViewP
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-50 rounded-lg bg-white border border-slate-200 px-3 py-1.5 text-xs text-slate-800 pointer-events-none shadow-lg dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200"
+          className="fixed z-50 rounded-lg bg-white border border-stone-200 px-3 py-1.5 text-xs text-stone-800 pointer-events-none shadow-lg dark:bg-stone-800 dark:border-stone-600 dark:text-stone-200"
           style={{ left: tooltip.x + 12, top: tooltip.y - 10 }}
         >
           {tooltip.text}

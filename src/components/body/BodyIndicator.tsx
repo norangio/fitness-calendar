@@ -9,7 +9,7 @@ function getSeverityColor(severity: number): string {
     case 1: return 'bg-green-500';
     case 2: return 'bg-lime-400';
     case 3: return 'bg-yellow-400';
-    case 4: return 'bg-orange-500';
+    case 4: return 'bg-amber-500';
     case 5: return 'bg-red-500';
     default: return 'bg-gray-400';
   }

@@ -16,49 +16,49 @@ export function DetailPopover({ activity, onClose, onDelete }: DetailPopoverProp
     <div className="fixed inset-0 z-40 flex items-center justify-center" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40" />
       <div
-        className="relative z-10 w-80 rounded-xl bg-white border border-slate-200 shadow-2xl p-5 dark:bg-slate-800 dark:border-slate-700"
+        className="relative z-10 w-80 rounded-xl bg-white border border-stone-200 shadow-2xl p-5 dark:bg-stone-800 dark:border-stone-700"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-full" style={{ backgroundColor: config.color }} />
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">{config.label}</span>
+            <span className="text-xs font-medium text-stone-500 dark:text-stone-400">{config.label}</span>
           </div>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-900 cursor-pointer dark:text-slate-400 dark:hover:text-slate-200">
+          <button onClick={onClose} className="text-stone-500 hover:text-stone-900 cursor-pointer dark:text-stone-400 dark:hover:text-stone-200">
             <X size={16} />
           </button>
         </div>
 
-        <h3 className="text-lg font-semibold text-slate-900 mb-1 dark:text-slate-100">{activity.title}</h3>
-        <p className="text-sm text-slate-500 mb-4 dark:text-slate-400">{activity.date}{activity.startTime ? ` at ${activity.startTime}` : ''}</p>
+        <h3 className="text-lg font-semibold text-stone-900 mb-1 dark:text-stone-100">{activity.title}</h3>
+        <p className="text-sm text-stone-500 mb-4 dark:text-stone-400">{activity.date}{activity.startTime ? ` at ${activity.startTime}` : ''}</p>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-            <Clock size={14} className="text-slate-400 dark:text-slate-500" />
+          <div className="flex items-center gap-2 text-sm text-stone-700 dark:text-stone-300">
+            <Clock size={14} className="text-stone-400 dark:text-stone-500" />
             <span>{Math.round(activity.durationMinutes)} min</span>
           </div>
           {activity.calories != null && (
-            <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-              <Flame size={14} className="text-slate-400 dark:text-slate-500" />
+            <div className="flex items-center gap-2 text-sm text-stone-700 dark:text-stone-300">
+              <Flame size={14} className="text-stone-400 dark:text-stone-500" />
               <span>{activity.calories} cal</span>
             </div>
           )}
           {activity.avgHeartRate != null && (
-            <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-              <Heart size={14} className="text-slate-400 dark:text-slate-500" />
+            <div className="flex items-center gap-2 text-sm text-stone-700 dark:text-stone-300">
+              <Heart size={14} className="text-stone-400 dark:text-stone-500" />
               <span>{activity.avgHeartRate} bpm avg</span>
             </div>
           )}
           {activity.distanceKm != null && (
-            <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300">
-              <MapPin size={14} className="text-slate-400 dark:text-slate-500" />
+            <div className="flex items-center gap-2 text-sm text-stone-700 dark:text-stone-300">
+              <MapPin size={14} className="text-stone-400 dark:text-stone-500" />
               <span>{activity.distanceKm.toFixed(1)} km</span>
             </div>
           )}
         </div>
 
         {activity.notes && (
-          <p className="text-sm text-slate-500 mb-4 border-t border-slate-200 pt-3 dark:text-slate-400 dark:border-slate-700">{activity.notes}</p>
+          <p className="text-sm text-stone-500 mb-4 border-t border-stone-200 pt-3 dark:text-stone-400 dark:border-stone-700">{activity.notes}</p>
         )}
 
         <div className="flex justify-end">

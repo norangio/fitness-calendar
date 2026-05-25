@@ -4,7 +4,7 @@ A React + TypeScript fitness activity calendar with Garmin live sync + CSV impor
 
 ## Tech Stack
 - **React 19** + **TypeScript** + **Vite 7**
-- **Tailwind CSS** for styling (dark theme, slate/orange palette)
+- **Tailwind CSS** for styling (stone/neutral palette, unified norangio design system — Inter + JetBrains Mono, stone-900 primary actions)
 - **Zustand** for state management (with `persist` middleware for settings)
 - **Framer Motion** for view transitions
 - **Recharts** for activity charts

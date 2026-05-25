@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Moon, Sun, Upload, Download, FolderUp, Activity, Trash2, HeartPulse, RefreshCw } from 'lucide-react';
+import { Moon, Sun, Upload, Download, FolderUp, Trash2, HeartPulse, RefreshCw } from 'lucide-react';
 import { Button } from '../ui/Button.tsx';
 import { useAppStore } from '../../store/activityStore.ts';
 import { exportBackupJSON, importBackupJSON, type BackupData } from '../../lib/storage.ts';
@@ -72,12 +72,14 @@ export function Header({ onDataCleared, currentUser }: HeaderProps) {
 
 
   return (
-    <header className="flex items-center justify-between border-b border-slate-200 bg-white/80 backdrop-blur px-3 sm:px-6 py-2 sm:py-3 dark:border-slate-700 dark:bg-slate-800/80">
-      <div className="flex items-center gap-2 sm:gap-3">
-        <Activity className="text-orange-500 shrink-0" size={24} />
-        <h1 className="text-lg font-bold text-slate-900 hidden sm:block dark:text-slate-100">Fitness Calendar</h1>
+    <header className="flex items-center justify-between border-b border-stone-200 bg-white px-4 sm:px-8 py-0 h-16 dark:border-stone-700 dark:bg-stone-900">
+      <div className="flex items-center gap-2.5">
+        <div className="w-8 h-8 rounded-lg bg-stone-900 text-white flex items-center justify-center text-[12px] font-bold dark:bg-stone-100 dark:text-stone-900">N</div>
+        <span className="font-semibold text-[15px] text-stone-900 dark:text-stone-100">norangio</span>
+        <span className="text-stone-300 dark:text-stone-600">/</span>
+        <span className="text-[14px] text-stone-500">fitness</span>
       </div>
-      <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
+      <div className="flex items-center gap-1 sm:gap-1.5 flex-wrap justify-end">
         <Button variant="ghost" size="sm" onClick={handleClear}>
           <Trash2 size={14} />
           <span className="hidden sm:inline">Clear</span>

@@ -24,7 +24,11 @@ export const useAppStore = create<AppState>()(
       viewMode: 'month',
       setViewMode: (viewMode) => set({ viewMode }),
       theme: 'dark',
-      toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
+      toggleTheme: () => set((s) => {
+        const newTheme = s.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.classList.toggle('dark', newTheme === 'dark');
+        return { theme: newTheme };
+      }),
       importModalOpen: false,
       setImportModalOpen: (importModalOpen) => set({ importModalOpen }),
       selectedActivityId: null,
@@ -44,3 +48,6 @@ export const useAppStore = create<AppState>()(
     }
   )
 );
+
+// Apply persisted theme to DOM immediately (before React renders)
+document.documentElement.classList.toggle('dark', useAppStore.getState().theme === 'dark');

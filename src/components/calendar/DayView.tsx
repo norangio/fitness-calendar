@@ -16,7 +16,7 @@ const SEVERITY_LABELS: Record<number, string> = {
 
 const SEVERITY_COLORS: Record<number, string> = {
   1: 'border-green-500', 2: 'border-lime-400', 3: 'border-yellow-400',
-  4: 'border-orange-500', 5: 'border-red-500',
+  4: 'border-amber-500', 5: 'border-red-500',
 };
 
 export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick }: DayViewProps) {
@@ -27,32 +27,32 @@ export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700">
+      <div className="px-5 py-3 border-b border-stone-200 dark:border-stone-700">
         <div className="flex items-center gap-3">
           <div className={`text-3xl font-bold w-12 h-12 flex items-center justify-center rounded-full ${
-            today ? 'bg-orange-500 text-white' : 'text-slate-800 dark:text-slate-200'
+            today ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : 'text-stone-800 dark:text-stone-200'
           }`}>
             {format(anchorDate, 'd')}
           </div>
           <div>
-            <div className="text-sm text-slate-500 dark:text-slate-400">{format(anchorDate, 'EEEE')}</div>
-            <div className="text-sm text-slate-400 dark:text-slate-500">{dayActivities.length} activities</div>
+            <div className="text-sm text-stone-500 dark:text-stone-400">{format(anchorDate, 'EEEE')}</div>
+            <div className="text-sm text-stone-400 dark:text-stone-500">{dayActivities.length} activities</div>
           </div>
         </div>
       </div>
 
       {dayBodyLogs.length > 0 && (
-        <div className="px-5 py-3 border-b border-slate-200 dark:border-slate-700">
+        <div className="px-5 py-3 border-b border-stone-200 dark:border-stone-700">
           <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2 dark:text-slate-400">Body Log</h3>
           <div className="space-y-2">
             {dayBodyLogs.map((entry) => (
               <div
                 key={entry.id}
-                className={`rounded-lg bg-slate-100 p-3 border-l-4 dark:bg-slate-700/40 ${SEVERITY_COLORS[entry.severity]}`}
+                className={`rounded-lg bg-stone-100 p-3 border-l-4 dark:bg-stone-700/40 ${SEVERITY_COLORS[entry.severity]}`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-slate-800 capitalize dark:text-slate-200">{entry.category} pain</span>
-                  <span className="text-xs text-slate-500 dark:text-slate-400">{SEVERITY_LABELS[entry.severity]} ({entry.severity}/5)</span>
+                  <span className="text-xs text-stone-500 dark:text-stone-400">{SEVERITY_LABELS[entry.severity]} ({entry.severity}/5)</span>
                 </div>
                 {entry.notes && <p className="text-xs text-slate-500 mt-1 dark:text-slate-400">{entry.notes}</p>}
               </div>
@@ -81,11 +81,11 @@ export function DayView({ anchorDate, activities, bodyLogs = [], onActivityClick
                   onClick={() => onActivityClick(activity)}
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">{activity.title}</span>
-                    <span className="text-xs text-slate-500 dark:text-slate-400 shrink-0">{Math.round(activity.durationMinutes)} min</span>
+                    <span className="text-sm font-semibold text-stone-800 dark:text-stone-200">{activity.title}</span>
+                    <span className="text-xs text-stone-500 dark:text-stone-400 shrink-0">{Math.round(activity.durationMinutes)} min</span>
                   </div>
                   {(activity.calories || activity.avgHeartRate) && (
-                    <div className="mt-1 flex gap-3 text-xs text-slate-500 dark:text-slate-400">
+                    <div className="mt-1 flex gap-3 text-xs text-stone-500 dark:text-stone-400">
                       {activity.calories && <span>{activity.calories} cal</span>}
                       {activity.avgHeartRate && <span>{activity.avgHeartRate} bpm avg</span>}
                     </div>

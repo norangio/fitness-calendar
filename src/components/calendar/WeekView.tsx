@@ -30,18 +30,18 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
   return (
     <div className="flex flex-col flex-1 min-h-0">
       {/* Day headers */}
-      <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-700">
+      <div className="grid grid-cols-7 border-b border-stone-200 dark:border-stone-700">
         {days.map((day) => {
           const today = isToday(day);
           return (
             <div
               key={day.toISOString()}
-              className="px-1 py-2 text-center cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-700/30"
+              className="px-1 py-2 text-center cursor-pointer hover:bg-stone-100 dark:hover:bg-stone-700/30"
               onClick={() => onDayClick(day)}
             >
-              <div className="text-xs text-slate-500 dark:text-slate-400">{format(day, 'EEE')}</div>
+              <div className="text-xs text-stone-500 dark:text-stone-400">{format(day, 'EEE')}</div>
               <div className={`text-lg font-semibold mt-0.5 w-8 h-8 flex items-center justify-center rounded-full mx-auto ${
-                today ? 'bg-orange-500 text-white' : 'text-slate-800 dark:text-slate-200'
+                today ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900' : 'text-stone-800 dark:text-stone-200'
               }`}>
                 {format(day, 'd')}
               </div>
@@ -52,7 +52,7 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
 
       {/* Activity columns */}
       <div className="flex-1 overflow-y-auto">
-        <div className="grid grid-cols-7 divide-x divide-slate-200 dark:divide-slate-700/50 h-full min-h-full">
+        <div className="grid grid-cols-7 divide-x divide-stone-200 dark:divide-stone-700/50 h-full min-h-full">
           {days.map((day) => {
             const key = format(day, 'yyyy-MM-dd');
             const dayActivities = activityMap.get(key) ?? [];
@@ -61,7 +61,7 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
             return (
               <div
                 key={key}
-                className={`p-1 space-y-1 ${today ? 'bg-slate-50 dark:bg-slate-700/10' : ''}`}
+                className={`p-1 space-y-1 ${today ? 'bg-stone-50 dark:bg-stone-700/10' : ''}`}
               >
                 {dayActivities.map((activity) => {
                   const config = ACTIVITY_TYPES[activity.type];
@@ -75,10 +75,10 @@ export function WeekView({ anchorDate, activities, onDayClick, onActivityClick }
                       }}
                       onClick={() => onActivityClick(activity)}
                     >
-                      <div className="text-xs font-medium text-slate-800 dark:text-slate-200 truncate leading-tight">
+                      <div className="text-xs font-medium text-stone-800 dark:text-stone-200 truncate leading-tight">
                         {activity.title}
                       </div>
-                      <div className="text-[10px] text-slate-500 dark:text-slate-400 leading-tight">
+                      <div className="text-[10px] text-stone-500 dark:text-stone-400 leading-tight">
                         {Math.round(activity.durationMinutes)}m
                       </div>
                     </div>

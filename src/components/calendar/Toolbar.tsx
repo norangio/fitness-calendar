@@ -21,22 +21,22 @@ const VIEW_MODES: { value: ViewMode; label: string; shortLabel: string }[] = [
 
 export function Toolbar({ title, viewMode, onViewModeChange, onPrev, onNext, onToday }: ToolbarProps) {
   return (
-    <div className="flex items-center justify-between border-b border-slate-200 px-3 sm:px-5 py-2 sm:py-3 dark:border-slate-700">
+    <div className="flex items-center justify-between border-b border-stone-200 px-3 sm:px-5 py-2 sm:py-3 dark:border-stone-700">
       <div className="flex items-center gap-1 sm:gap-2">
         <Button variant="ghost" size="sm" onClick={onPrev}><ChevronLeft size={16} /></Button>
         <Button variant="ghost" size="sm" onClick={onToday}>Today</Button>
         <Button variant="ghost" size="sm" onClick={onNext}><ChevronRight size={16} /></Button>
-        <h2 className="ml-1 sm:ml-2 text-sm sm:text-lg font-semibold text-slate-900 dark:text-slate-100">{title}</h2>
+        <h2 className="ml-1 sm:ml-2 text-sm sm:text-lg font-semibold text-stone-900 dark:text-stone-100">{title}</h2>
       </div>
-      <div className="flex rounded-lg bg-slate-200/70 p-0.5 dark:bg-slate-700/50">
+      <div className="flex rounded-lg bg-stone-100 p-0.5 dark:bg-stone-700/50">
         {VIEW_MODES.map((mode) => (
           <button
             key={mode.value}
             onClick={() => onViewModeChange(mode.value)}
             className={`rounded-md px-2 sm:px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${
               viewMode === mode.value
-                ? 'bg-orange-500 text-white'
-                : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200'
+                ? 'bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-900'
+                : 'text-stone-500 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200'
             }`}
           >
             <span className="hidden sm:inline">{mode.label}</span>

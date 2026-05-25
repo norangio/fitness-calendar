@@ -47,15 +47,15 @@ export function YearView({ anchorDate, activities, onMonthClick }: YearViewProps
           return (
             <div
               key={month.toISOString()}
-              className="rounded-lg bg-slate-100 p-3 cursor-pointer hover:bg-slate-200 transition-colors dark:bg-slate-800/50 dark:hover:bg-slate-700/50"
+              className="rounded-lg bg-stone-100 p-3 cursor-pointer hover:bg-stone-200 transition-colors dark:bg-stone-800/50 dark:hover:bg-stone-700/50"
               onClick={() => onMonthClick(month)}
             >
-              <div className="text-sm font-semibold text-slate-700 mb-2 dark:text-slate-300">
+              <div className="text-sm font-semibold text-stone-700 mb-2 dark:text-stone-300">
                 {format(month, 'MMMM')}
               </div>
               <div className="grid grid-cols-7 gap-px">
                 {WEEKDAYS.map((d, i) => (
-                  <div key={i} className="text-[8px] text-slate-400 text-center dark:text-slate-500">{d}</div>
+                  <div key={i} className="text-[8px] text-stone-400 text-center dark:text-stone-500">{d}</div>
                 ))}
                 {days.map((day) => {
                   const key = format(day, 'yyyy-MM-dd');
@@ -71,7 +71,7 @@ export function YearView({ anchorDate, activities, onMonthClick }: YearViewProps
                       }`}
                     >
                       {today && (
-                        <div className="absolute inset-0.5 rounded-full bg-orange-500/30" />
+                        <div className="absolute inset-0.5 rounded-full bg-stone-900/20 dark:bg-stone-100/20" />
                       )}
                       {dayActivities.length > 0 ? (
                         <div className="flex gap-px">
@@ -84,7 +84,7 @@ export function YearView({ anchorDate, activities, onMonthClick }: YearViewProps
                           ))}
                         </div>
                       ) : (
-                        <span className="text-[9px] text-slate-400 dark:text-slate-600">{inMonth ? format(day, 'd') : ''}</span>
+                        <span className="text-[9px] text-stone-400 dark:text-stone-600">{inMonth ? format(day, 'd') : ''}</span>
                       )}
                     </div>
                   );
